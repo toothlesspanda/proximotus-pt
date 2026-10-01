@@ -61,11 +61,11 @@ function renderLineTable(data, lineId, stations) {
         <tr>
           <th>Estação</th>
           <th className="coord-indicator" />
-          <th className="coord-num coord-primary">↑{DESTINATIONS[lineId].a.label}</th>
+          <th className="coord-num coord-primary">↓{DESTINATIONS[lineId].a.label}</th>
           <th className="coord-num coord-secondary">2o</th>
           <th className="coord-num coord-secondary">3o</th>
           <th className="coord-indicator" />
-          <th className="coord-num coord-primary">↓{DESTINATIONS[lineId].b.label}</th>
+          <th className="coord-num coord-primary">↑{DESTINATIONS[lineId].b.label}</th>
           <th className="coord-num coord-secondary">2o</th>
           <th className="coord-num coord-secondary">3o</th>
         </tr>
@@ -97,6 +97,7 @@ function renderLineTable(data, lineId, stations) {
 
 export default function StationTimelines({ data, loading, expanded }) {
   const [pages, setPages] = useState({ vermelha: 0, verde: 0, amarela: 0, azul: 0 })
+  const [showSecondary, setShowSecondary] = useState(false)
 
   if (!expanded) {
     return (
@@ -118,8 +119,11 @@ export default function StationTimelines({ data, loading, expanded }) {
         <span><span className="coord-train coord-train--stopped" /> na estação</span>
         <span><span className="coord-train coord-train--near" /> &lt;1 min</span>
         <span className="coord-legend-stop">stop = parado</span>
+        <button className="coord-secondary-toggle" onClick={() => setShowSecondary(s => !s)}>
+          {showSecondary ? "−" : "+"} 2º/3º
+        </button>
       </div>
-      <div className="coord-lines-stack">
+      <div className={`coord-lines-stack${showSecondary ? " show-secondary" : ""}`}>
         {Object.entries(lines).map(([lineId, line]) => {
           const page = pages[lineId]
           const totalPages = Math.ceil(line.stations.length / PAGE_SIZE)

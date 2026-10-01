@@ -97,7 +97,8 @@ body {
   background: var(--color-surface);
   border-top: 1px solid var(--color-border);
   max-height: 45vh;
-  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
 }
 
 .info-panel-header {
@@ -106,6 +107,13 @@ body {
   justify-content: space-between;
   border-bottom: 1px solid var(--color-border);
   padding-right: 8px;
+  flex-shrink: 0;
+}
+
+.info-panel-body {
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
 }
 
 .info-panel-title {
@@ -288,16 +296,33 @@ body {
 }
 .coord-legend span { display: flex; align-items: center; gap: 4px; }
 .coord-legend-stop { color: var(--color-stopped); }
+.coord-secondary-toggle {
+  background: none;
+  border: 1px solid var(--color-border);
+  color: var(--color-text-muted);
+  font-size: 0.6rem;
+  font-family: inherit;
+  padding: 1px 6px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-left: auto;
+}
+.coord-secondary-toggle:hover { color: var(--color-text); }
 
 /* Station timelines grid */
 .coord-lines-stack {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-  padding: 8px 12px;
+  gap: 0;
+  padding: 8px 0;
 }
 .coord-lines-stack > .coord-line {
   flex: 1 1 280px;
+  padding: 0 12px;
+  border-right: 1px solid var(--color-border);
+}
+.coord-lines-stack > .coord-line:last-child {
+  border-right: none;
 }
 
 .coord-line-header {
@@ -365,7 +390,16 @@ body {
 .coord-near { opacity: 1; font-weight: 500; }
 .coord-indicator { width: 10px; padding: 0 1px; text-align: center; }
 .coord-line td:nth-child(6),
-.coord-line th:nth-child(6) { border-left: 2px solid var(--color-text-muted); }
+.coord-line th:nth-child(6) { border-left: 1px dotted var(--color-text-muted); }
 .coord-train { font-size: 0.5rem; color: transparent; display: inline-block; width: 8px; height: 8px; border-radius: 2px; border: none; }
 .coord-train--stopped { background: var(--color-stopped); }
 .coord-train--near { background: #fff; }
+
+/* Hide secondary columns on mobile by default */
+@media (max-width: 768px) {
+  .coord-lines-stack .coord-secondary { display: none; }
+  .coord-lines-stack.show-secondary .coord-secondary { display: table-cell; }
+}
+@media (min-width: 769px) {
+  .coord-secondary-toggle { display: none; }
+}

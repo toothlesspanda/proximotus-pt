@@ -77,7 +77,7 @@ export default function StationTimes({ metroData, expandedStation, onToggleExpan
                 {dirs.map((d, di) => {
                   const t = d.entries[0] ? formatTime(d.entries[0].time) : null
                   const at = d.entries[0] && isAtStation(d.entries[0].time)
-                  const arrow = d.key === "b" ? "→" : "←"
+                  const arrow = d.key === "a" ? "→" : "←"
                   const y = badgeY + 70 + di * 70
                   return (
                     <g key={d.key}>
@@ -142,7 +142,7 @@ export default function StationTimes({ metroData, expandedStation, onToggleExpan
                     strokeWidth={6}
                   />
                   {sections.map(({ d, count, sectionY }, si) => {
-                    const arrow = d.key === "b" ? "→" : "←"
+                    const arrow = d.key === "a" ? "→" : "←"
                     return (
                       <g key={d.key}>
                         {si > 0 && (

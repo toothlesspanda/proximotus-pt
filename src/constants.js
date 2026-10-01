@@ -1,9 +1,11 @@
 // Destination IDs per line from the Metro API
+// Direction "a" = trains heading towards the LAST station in each line's station list
+// Direction "b" = trains heading towards the FIRST station in each line's station list
 export const DESTINATIONS = {
-  vermelha: { a: { id: 38, label: "AP" }, b: { id: 60, label: "SS" } },
-  verde:    { a: { id: 50, label: "TE" }, b: { id: 54, label: "CS" } },
-  amarela:  { a: { id: 48, label: "OD" }, b: { id: 43, label: "RA" } },
-  azul:     { a: { id: 33, label: "SP" }, b: { id: 42, label: "RB" } },
+  vermelha: { a: { id: 60, label: "SS" }, b: { id: 38, label: "AP" } },
+  verde:    { a: { id: 54, label: "CS" }, b: { id: 50, label: "TE" } },
+  amarela:  { a: { id: 43, label: "RA" }, b: { id: 48, label: "OD" } },
+  azul:     { a: { id: 42, label: "RB" }, b: { id: 33, label: "SP" } },
 }
 
 export const PAGE_SIZE = 10
