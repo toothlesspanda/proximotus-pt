@@ -24,9 +24,11 @@ function proxyRequest(path, method, headers, body) {
 }
 
 exports.handler = async (event) => {
-  // Netlify rewrites /api/metro/* to /.netlify/functions/metro-proxy/*
-  // so event.path is /.netlify/functions/metro-proxy/token, not /api/metro/token
-  const apiPath = event.path.replace(/^\/.netlify\/functions\/metro-proxy/, "") || "/"
+  const apiPath = event.path
+    .replace(/^\/.netlify\/functions\/metro-proxy/, "")
+    .replace(/^\/api\/metro/, "") || "/"
+
+  console.log("Incoming path:", event.path, "→ API path:", apiPath)
 
   if (event.httpMethod === "OPTIONS") {
     return {

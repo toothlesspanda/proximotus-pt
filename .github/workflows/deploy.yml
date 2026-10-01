@@ -12,7 +12,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
 
       - run: npm ci
@@ -22,7 +22,7 @@ jobs:
           VITE_METRO_API_URL: /api/metro
           VITE_METRO_API_TOKEN: ${{ secrets.VITE_METRO_API_TOKEN }}
 
-      - run: npx netlify-cli deploy --prod --skip-build --dir=dist --functions=netlify/functions --message "Deploy ${{ github.event.release.tag_name }}"
+      - run: npx netlify-cli deploy --prod --no-build --dir=dist --functions=netlify/functions --message "Deploy ${{ github.event.release.tag_name }}"
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
