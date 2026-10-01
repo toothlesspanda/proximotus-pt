@@ -5,7 +5,7 @@ export const DESTINATIONS = {
   vermelha: { a: { id: 60, label: "SS" }, b: { id: 38, label: "AP" } },
   verde:    { a: { id: 54, label: "CS" }, b: { id: 50, label: "TE" } },
   amarela:  { a: { id: 43, label: "RA" }, b: { id: 48, label: "OD" } },
-  azul:     { a: { id: 42, label: "RB" }, b: { id: 33, label: "SP" } },
+  azul:     { a: { id: 33, label: "SP" }, b: { id: 42, label: "RB" } },
 }
 
 export const PAGE_SIZE = 10
