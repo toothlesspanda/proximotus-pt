@@ -1,7 +1,3 @@
-[build]
-  publish = "dist"
-  functions = "netlify/functions"
-
 [[redirects]]
   from = "/api/metro/*"
   to = "/.netlify/functions/metro-proxy/:splat"
