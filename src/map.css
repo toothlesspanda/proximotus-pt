@@ -1,0 +1,154 @@
+/* Map container */
+.map-container {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  position: relative;
+  padding: 20px;
+}
+
+.map-container--interactive {
+  cursor: grab;
+  padding: 0;
+  touch-action: none;
+  user-select: none;
+}
+
+.map-container--interactive:active { cursor: grabbing; }
+
+.metro-map {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Stations */
+.station-circle {
+  cursor: pointer;
+  transition: r 0.15s ease, stroke-width 0.15s ease, stroke-opacity 0.15s ease;
+  stroke-opacity: 0;
+}
+
+.station-circle:hover {
+  r: 120;
+  stroke-opacity: 0.4;
+}
+
+.station-label {
+  font-size: 160px;
+  fill: var(--color-text-muted);
+  opacity: 0.35;
+  pointer-events: none;
+  user-select: none;
+  font-weight: 500;
+  letter-spacing: 0.2px;
+  transition: opacity 0.15s ease, fill 0.15s ease;
+}
+
+.station-group:hover .station-label,
+.station-label--active {
+  fill: var(--color-text);
+  opacity: 1;
+  font-weight: 700;
+}
+
+.interchange-label {
+  fill: #fff;
+  font-weight: 600;
+}
+
+/* Line tracks */
+.line-path {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.line-path-border {
+  stroke-width: 560;
+  opacity: 0.3;
+  filter: brightness(0.5);
+}
+
+.line-track {
+  stroke-width: 167;
+  opacity: 0.9;
+  stroke-linecap: round;
+}
+
+.line-track-arrow {
+  fill: var(--color-accent);
+  opacity: 0.8;
+}
+
+.track-arrows {
+  font-size: 200px;
+  font-weight: 900;
+  fill: currentColor;
+  opacity: 0.4;
+  filter: brightness(0.5);
+  pointer-events: none;
+  user-select: none;
+  dominant-baseline: central;
+  text-anchor: middle;
+}
+
+/* Trains */
+.train-marker {
+  filter: drop-shadow(0 0 4px rgba(255,255,255,0.5));
+}
+.train-body { fill: var(--color-train-fill); stroke: currentColor; stroke-width: 10; }
+.train-arrow { fill: currentColor; }
+.train-marker--stopped .train-body { fill: var(--color-train-stopped-fill); stroke: var(--color-train-stopped-stroke); stroke-width: 16; }
+.train-marker--stopped .train-arrow { fill: var(--color-train-stopped-stroke); }
+
+/* Station time badges */
+.station-times-layer { pointer-events: all; }
+.badge-bg { fill: var(--color-badge-bg); stroke: var(--color-badge-border); stroke-width: 4; }
+.badge-bg--expanded { fill: var(--color-badge-bg); }
+.badge-label { font-size: 60px; font-weight: 600; fill: var(--color-badge-muted); }
+.badge-value { font-size: 70px; font-weight: 700; font-family: monospace; fill: var(--color-badge-text); }
+.badge-value--stopped { fill: var(--color-stopped); }
+.badge-dir { font-size: 60px; font-weight: 700; }
+.badge-dim { font-size: 50px; font-weight: 500; fill: var(--color-badge-dim); }
+.badge-toggle { font-size: 70px; font-weight: 700; fill: var(--color-badge-muted); text-anchor: middle; }
+.badge-separator { stroke: var(--color-badge-dim); stroke-width: 3; }
+
+/* Location marker */
+.location-dot {
+  fill: #4285f4;
+  stroke: #fff;
+  stroke-width: 2;
+  filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
+}
+.location-dot-inner {
+  fill: #fff;
+  stroke: none;
+}
+
+/* Map controls overlay */
+.controls {
+  position: absolute;
+  bottom: 16px;
+  right: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.controls button {
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--color-border-light);
+  background: var(--color-surface);
+  color: var(--color-text);
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.controls button:hover { background: var(--color-border); }
+.controls button.active { background: rgba(255,255,255,0.2); border-color: rgba(255,255,255,0.4); }

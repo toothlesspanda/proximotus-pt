@@ -58,37 +58,28 @@ function getLabelLayout(station, side) {
   }
 }
 
-const SKIP = new Set(["de", "do", "da", "das", "dos"])
-
-function abbreviate(name) {
-  return name
-    .split(/[\s/\-]+/)
-    .filter(w => !SKIP.has(w.toLowerCase()))
-    .map(w => w[0].toUpperCase())
-    .join("")
-}
-
-export default function Interchange({ ids, shortLabels }) {
-  const station = findStation(ids[0])
+export default function Interchange({ pair, shortLabels }) {
+  const [lineId, stopId] = pair[0]
+  const station = findStation(lineId, stopId)
   if (!station) return null
 
   const side = station.labelPos || "above"
   const { tickProps, labelProps } = getLabelLayout(station, side)
-  const r = 130
+  const radius = 130
 
   return (
     <g>
       <circle
         cx={station.x}
         cy={station.y}
-        r={r}
-        fill="#fff"
-        stroke="#aaa"
+        r={radius}
+        fill="var(--color-accent)"
+        stroke="var(--color-text-muted)"
         strokeWidth={15}
       />
       <line
         {...tickProps}
-        stroke="#fff"
+        stroke="var(--color-accent)"
         strokeWidth={20}
         opacity={0.7}
       />

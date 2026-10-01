@@ -1,14 +1,4 @@
-const SKIP = new Set(["de", "do", "da", "das", "dos"])
-
-function abbreviate(name) {
-  return name
-    .split(/[\s/\-]+/)
-    .filter(w => !SKIP.has(w.toLowerCase()))
-    .map(w => w[0].toUpperCase())
-    .join("")
-}
-
-export default function Station({ station, lineId, color, index, onHover, hideLabel, defaultSide, shortLabels }) {
+export default function Station({ station, lineId, color, index, onHover, hideLabel, defaultSide, shortLabels, isExpanded, onToggleExpand, isNearest }) {
   const side = station.labelPos || defaultSide || (index % 2 !== 0 ? "above" : "below")
 
   const tickStart = 280
@@ -60,7 +50,7 @@ export default function Station({ station, lineId, color, index, onHover, hideLa
   }
 
   return (
-    <g className="station-group">
+    <g className="station-group" onClick={() => onToggleExpand?.(`${lineId}:${station.stopId}`)} style={{ cursor: onToggleExpand ? "pointer" : undefined }}>
       <circle
         cx={station.x}
         cy={station.y}
@@ -70,7 +60,7 @@ export default function Station({ station, lineId, color, index, onHover, hideLa
         strokeWidth={30}
         className="station-circle"
         style={{ filter: "brightness(0.5)" }}
-        data-id={station.id}
+        data-id={station.stopId}
         data-line={lineId}
         onMouseEnter={() => onHover?.({ station, lineId })}
         onMouseLeave={() => onHover?.(null)}
@@ -85,9 +75,9 @@ export default function Station({ station, lineId, color, index, onHover, hideLa
           />
           <text
             {...labelProps}
-            className="station-label"
+            className={`station-label${isExpanded || isNearest ? " station-label--active" : ""}`}
           >
-            {shortLabels ? abbreviate(station.name) : station.name}
+            {shortLabels ? (station.stopId || station.name) : station.name}
           </text>
         </>
       )}

@@ -74,8 +74,8 @@ export function useMapControls() {
 
   const onTouchStart = useCallback((e) => {
     if (e.touches.length === 1) {
-      const t = e.touches[0]
-      panRef.current = { isPanning: true, startX: t.clientX, startY: t.clientY }
+      const touch = e.touches[0]
+      panRef.current = { isPanning: true, startX: touch.clientX, startY: touch.clientY }
     }
   }, [])
 
@@ -84,11 +84,11 @@ export function useMapControls() {
     e.preventDefault()
     const container = containerRef.current
     if (!container) return
-    const t = e.touches[0]
-    const dx = (t.clientX - panRef.current.startX) * (viewBoxRef.current.w / container.clientWidth)
-    const dy = (t.clientY - panRef.current.startY) * (viewBoxRef.current.h / container.clientHeight)
-    panRef.current.startX = t.clientX
-    panRef.current.startY = t.clientY
+    const touch = e.touches[0]
+    const dx = (touch.clientX - panRef.current.startX) * (viewBoxRef.current.w / container.clientWidth)
+    const dy = (touch.clientY - panRef.current.startY) * (viewBoxRef.current.h / container.clientHeight)
+    panRef.current.startX = touch.clientX
+    panRef.current.startY = touch.clientY
     setViewBox((vb) => ({ ...vb, x: vb.x - dx, y: vb.y - dy }))
   }, [])
 
@@ -140,6 +140,18 @@ export function useMapControls() {
     setViewBox({ x: cx - w / 2, y: cy - h / 2, w, h })
   }, [])
 
+  const zoomToPoint = useCallback((svgX, svgY, zoomFactor = 0.35) => {
+    const container = containerRef.current
+    if (!container || !initScaleRef.current) return
+    const newScale = initScaleRef.current * zoomFactor
+    scaleRef.current = newScale
+    const cw = container.clientWidth
+    const ch = container.clientHeight
+    const w = cw * newScale
+    const h = ch * newScale
+    setViewBox({ x: svgX - w / 2, y: svgY - h / 2, w, h })
+  }, [])
+
   // keep a ref to viewBox for use in move handlers (avoids stale closures)
   const viewBoxRef = useRef(viewBox)
   viewBoxRef.current = viewBox
@@ -149,5 +161,5 @@ export function useMapControls() {
     onTouchStart, onTouchMove, onTouchEnd,
   }), [onMouseDown, onMouseMove, onMouseUp, onTouchStart, onTouchMove, onTouchEnd])
 
-  return { viewBox, containerRef, handlers, onWheel, zoomIn, zoomOut, zoomReset }
+  return { viewBox, containerRef, handlers, onWheel, zoomIn, zoomOut, zoomReset, zoomToPoint }
 }

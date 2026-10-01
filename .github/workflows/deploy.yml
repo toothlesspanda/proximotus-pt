@@ -1,0 +1,32 @@
+name: Deploy to Netlify
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+
+      - run: npm run build
+        env:
+          VITE_METRO_API_URL: /api/metro
+          VITE_METRO_API_TOKEN: ${{ secrets.VITE_METRO_API_TOKEN }}
+
+      - uses: nwtgck/actions-netlify@v3
+        with:
+          publish-dir: ./dist
+          functions-dir: ./netlify/functions
+          production-deploy: ${{ github.event_name == 'release' }}
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ced2db80-734c-4326-bd2a-a801b2e7bff2
