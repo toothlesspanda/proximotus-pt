@@ -1,13 +1,29 @@
-import { useState } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { lines } from "./data/lines"
+import { useMetroData } from "./hooks/useMetroData"
+import { useGeolocation } from "./hooks/useGeolocation"
 import MetroMap from "./components/MetroMap"
-import Legend from "./components/Legend"
-import CoordPanel from "./components/CoordPanel"
+import BottomPanel from "./components/BottomPanel"
+
+const THEMES = ["dark", "light", "high-contrast"]
 
 export default function App() {
   const [visibleLines, setVisibleLines] = useState(
     new Set(Object.keys(lines)),
   )
+  const [theme, setTheme] = useState(() => localStorage.getItem("theme") || "dark")
+  const { data, loading, refresh } = useMetroData()
+  const geo = useGeolocation()
+  const [zoomToPointFn, setZoomToPointFn] = useState(null)
+
+  useEffect(() => {
+    document.documentElement.setAttribute("data-theme", theme)
+    localStorage.setItem("theme", theme)
+  }, [theme])
+
+  const cycleTheme = () => {
+    setTheme(t => THEMES[(THEMES.indexOf(t) + 1) % THEMES.length])
+  }
 
   const toggleLine = (lineId) => {
     setVisibleLines((prev) => {
@@ -21,14 +37,35 @@ export default function App() {
     })
   }
 
+  const handleLocate = useCallback(() => {
+    geo.locate()
+  }, [geo.locate])
+
+  useEffect(() => {
+    if (!geo.nearest) return
+    const { station, lines: matchedLines } = geo.nearest
+    if (zoomToPointFn) {
+      zoomToPointFn(station.x, station.y)
+    }
+    setVisibleLines(matchedLines)
+  }, [geo.nearest, zoomToPointFn])
+
+  const handleResetLocation = useCallback(() => {
+    geo.clear()
+    setVisibleLines(new Set(Object.keys(lines)))
+  }, [geo.clear])
+
   return (
     <>
-      <header>
-        <h1>Proximotus</h1>
-        <Legend visibleLines={visibleLines} onToggleLine={toggleLine} />
-      </header>
-      <MetroMap visibleLines={visibleLines} />
-      <CoordPanel />
+      <MetroMap
+        visibleLines={visibleLines}
+        metroData={data}
+        theme={theme}
+        onCycleTheme={cycleTheme}
+        nearestStation={geo.nearest}
+        setZoomToPointFn={setZoomToPointFn}
+      />
+      <BottomPanel data={data} loading={loading} onRefresh={refresh} visibleLines={visibleLines} onToggleLine={toggleLine} nearestStation={geo.nearest} onLocate={handleLocate} onResetLocation={handleResetLocation} locating={geo.locating} />
     </>
   )
 }
