@@ -12,6 +12,9 @@
   padding: 0;
   touch-action: none;
   user-select: none;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  will-change: contents;
 }
 
 .map-container--interactive:active { cursor: grabbing; }
