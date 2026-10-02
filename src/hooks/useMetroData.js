@@ -22,10 +22,10 @@ function dedup(entries) {
 
 export function useMetroData() {
   const [data, setData] = useState({})
-  const [refreshing, setRefreshing] = useState(false)
+  const [refreshing, setRefreshing] = useState(true)
 
   function loadData(cancelled, isManual) {
-    if (isManual) setRefreshing(true)
+    setRefreshing(true)
     const lineIds = Object.keys(LINE_NAMES)
     let chain = Promise.resolve()
     for (const lineId of lineIds) {

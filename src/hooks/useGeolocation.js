@@ -58,22 +58,31 @@ export function useGeolocation() {
     setLocating(true)
     setError(null)
 
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        const { latitude, longitude } = pos.coords
-        localStorage.setItem(GEO_KEY, "true")
-        setPosition({ lat: latitude, lon: longitude })
-        const result = findNearestStation(latitude, longitude)
-        setNearest(result)
-        setLocating(false)
-      },
-      (err) => {
-        localStorage.removeItem(GEO_KEY)
-        setError(err.message)
-        setLocating(false)
-      },
-      { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 },
-    )
+    const onSuccess = (pos) => {
+      const { latitude, longitude } = pos.coords
+      localStorage.setItem(GEO_KEY, "true")
+      setPosition({ lat: latitude, lon: longitude })
+      const result = findNearestStation(latitude, longitude)
+      setNearest(result)
+      setLocating(false)
+    }
+
+    const onError = (err) => {
+      localStorage.removeItem(GEO_KEY)
+      setError(err.message)
+      setLocating(false)
+    }
+
+    // Try high accuracy first, fallback to low accuracy on timeout
+    navigator.geolocation.getCurrentPosition(onSuccess, (err) => {
+      if (err.code === err.TIMEOUT) {
+        navigator.geolocation.getCurrentPosition(onSuccess, onError, {
+          enableHighAccuracy: false, timeout: 15000, maximumAge: 120000,
+        })
+      } else {
+        onError(err)
+      }
+    }, { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 })
   }, [])
 
   const simulate = useCallback((lat, lon) => {

@@ -87,16 +87,40 @@ body {
 #root {
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  height: 100dvh;
   overflow: hidden;
 }
+
+/* Loading overlay */
+.loading-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: var(--color-bg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  color: var(--color-text-muted);
+  font-size: 0.85rem;
+}
+.loading-spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid var(--color-border);
+  border-top-color: var(--color-text);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
 
 /* Bottom panel */
 .info-panel {
   flex-shrink: 0;
   background: var(--color-surface);
   border-top: 1px solid var(--color-border);
-  max-height: 45vh;
+  max-height: 45dvh;
   display: flex;
   flex-direction: column;
 }
@@ -228,6 +252,12 @@ body {
 }
 .about-btn:hover { background: var(--color-border); }
 .about-btn--active { background: var(--color-border); color: var(--color-text); }
+.geo-error {
+  color: var(--color-line-vermelha);
+  font-size: 0.65rem;
+  font-weight: 700;
+  cursor: help;
+}
 
 .locating {
   animation: blink 0.8s ease-in-out infinite;
