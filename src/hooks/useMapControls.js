@@ -10,6 +10,7 @@ export function useMapControls() {
   const containerRef = useRef(null)
   const scaleRef = useRef(null)
   const initScaleRef = useRef(null)
+  const viewBoxRef = useRef(viewBox)
 
   useEffect(() => {
     const el = containerRef.current
@@ -73,51 +74,6 @@ export function useMapControls() {
     panRef.current.isPanning = false
   }, [])
 
-  const getTouchDist = (t1, t2) =>
-    Math.sqrt((t1.clientX - t2.clientX) ** 2 + (t1.clientY - t2.clientY) ** 2)
-
-  const getTouchCenter = (t1, t2) => ({
-    x: (t1.clientX + t2.clientX) / 2,
-    y: (t1.clientY + t2.clientY) / 2,
-  })
-
-  const onTouchStart = useCallback((e) => {
-    if (e.touches.length === 2) {
-      panRef.current.isPanning = false
-      pinchRef.current = { active: true, dist: getTouchDist(e.touches[0], e.touches[1]) }
-    } else if (e.touches.length === 1) {
-      const touch = e.touches[0]
-      panRef.current = { isPanning: true, startX: touch.clientX, startY: touch.clientY }
-    }
-  }, [])
-
-  const onTouchMove = useCallback((e) => {
-    if (e.touches.length === 2 && pinchRef.current.active) {
-      e.preventDefault()
-      const newDist = getTouchDist(e.touches[0], e.touches[1])
-      const factor = pinchRef.current.dist / newDist
-      pinchRef.current.dist = newDist
-      const center = getTouchCenter(e.touches[0], e.touches[1])
-      applyZoom(factor, center.x, center.y)
-      return
-    }
-    if (!panRef.current.isPanning || e.touches.length !== 1) return
-    e.preventDefault()
-    const container = containerRef.current
-    if (!container) return
-    const touch = e.touches[0]
-    const dx = (touch.clientX - panRef.current.startX) * (viewBoxRef.current.w / container.clientWidth)
-    const dy = (touch.clientY - panRef.current.startY) * (viewBoxRef.current.h / container.clientHeight)
-    panRef.current.startX = touch.clientX
-    panRef.current.startY = touch.clientY
-    setViewBox((vb) => ({ ...vb, x: vb.x - dx, y: vb.y - dy }))
-  }, [applyZoom])
-
-  const onTouchEnd = useCallback(() => {
-    panRef.current.isPanning = false
-    pinchRef.current.active = false
-  }, [])
-
   const applyZoom = useCallback((factor, clientX, clientY) => {
     const container = containerRef.current
     if (!container) return
@@ -137,6 +93,43 @@ export function useMapControls() {
       const my = vb.y + py * vb.h
       return { w: newW, h: newH, x: mx - px * newW, y: my - py * newH }
     })
+  }, [])
+
+  // --- touch / pinch-to-zoom ---
+  const getTouchDist = (t) => Math.hypot(t[0].clientX - t[1].clientX, t[0].clientY - t[1].clientY)
+  const getTouchCenter = (t) => ({ x: (t[0].clientX + t[1].clientX) / 2, y: (t[0].clientY + t[1].clientY) / 2 })
+
+  const onTouchStart = useCallback((e) => {
+    if (e.touches.length === 2) {
+      e.preventDefault()
+      pinchRef.current = { active: true, dist: getTouchDist(e.touches) }
+    } else if (e.touches.length === 1) {
+      panRef.current = { isPanning: true, startX: e.touches[0].clientX, startY: e.touches[0].clientY }
+    }
+  }, [])
+
+  const onTouchMove = useCallback((e) => {
+    if (e.touches.length === 2 && pinchRef.current.active) {
+      e.preventDefault()
+      const newDist = getTouchDist(e.touches)
+      const factor = pinchRef.current.dist / newDist
+      const center = getTouchCenter(e.touches)
+      pinchRef.current.dist = newDist
+      applyZoom(factor, center.x, center.y)
+    } else if (e.touches.length === 1 && panRef.current.isPanning) {
+      const container = containerRef.current
+      if (!container) return
+      const dx = (e.touches[0].clientX - panRef.current.startX) * (viewBoxRef.current.w / container.clientWidth)
+      const dy = (e.touches[0].clientY - panRef.current.startY) * (viewBoxRef.current.h / container.clientHeight)
+      panRef.current.startX = e.touches[0].clientX
+      panRef.current.startY = e.touches[0].clientY
+      setViewBox((vb) => ({ ...vb, x: vb.x - dx, y: vb.y - dy }))
+    }
+  }, [applyZoom])
+
+  const onTouchEnd = useCallback(() => {
+    pinchRef.current.active = false
+    panRef.current.isPanning = false
   }, [])
 
   const onWheel = useCallback((e) => {
@@ -174,8 +167,6 @@ export function useMapControls() {
     setViewBox({ x: svgX - w / 2, y: svgY - h / 2, w, h })
   }, [])
 
-  // keep a ref to viewBox for use in move handlers (avoids stale closures)
-  const viewBoxRef = useRef(viewBox)
   viewBoxRef.current = viewBox
 
   const handlers = useMemo(() => ({
