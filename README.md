@@ -4,10 +4,6 @@
   <img src="public/logo-full.png" alt="Proximotus" width="400" />
 </p>
 
-<p align="center">
-  <a href="https://app.netlify.com/projects/proximotus/deploys"><img src="https://api.netlify.com/api/v1/badges/ced2db80-734c-4326-bd2a-a801b2e7bff2/deploy-status" alt="Netlify Status" /></a>
-</p>
-
 **Proximotus** — *proxima deslocação*, do latim — é uma aplicação web interactiva que apresenta o mapa do metro de Lisboa em tempo real.
 
 ## Funcionalidades
