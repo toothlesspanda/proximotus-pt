@@ -6,6 +6,10 @@
 
 **Proximotus** — *proxima deslocação*, do latim — é uma aplicação web interactiva que apresenta o mapa do metro de Lisboa em tempo real.
 
+<p align="center">
+  <img src="public/og-image.png" alt="Screenshot" width="600" />
+</p>
+
 ## Funcionalidades
 
 - Mapa SVG interactivo com pan, zoom (scroll / pinch-to-zoom / botões)
