@@ -7,6 +7,10 @@ import BottomPanel from "./components/BottomPanel"
 
 const THEMES = ["dark", "light", "high-contrast"]
 
+function track(event) {
+  window.goatcounter?.count({ path: event, title: event, event: true })
+}
+
 export default function App() {
   const [visibleLines, setVisibleLines] = useState(
     new Set(Object.keys(lines)),
@@ -22,10 +26,13 @@ export default function App() {
   }, [theme])
 
   const cycleTheme = () => {
-    setTheme(t => THEMES[(THEMES.indexOf(t) + 1) % THEMES.length])
+    const next = THEMES[(THEMES.indexOf(theme) + 1) % THEMES.length]
+    track(`theme-${next}`)
+    setTheme(next)
   }
 
   const toggleLine = (lineId) => {
+    track(`toggle-line-${lineId}`)
     setVisibleLines((prev) => {
       const next = new Set(prev)
       if (next.has(lineId)) {
@@ -38,6 +45,7 @@ export default function App() {
   }
 
   const handleLocate = useCallback(() => {
+    track('locate')
     geo.locate()
   }, [geo.locate])
 

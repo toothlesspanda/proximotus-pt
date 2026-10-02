@@ -4,6 +4,10 @@ import StationTimelines from "./StationTimelines"
 
 const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent)
 
+function track(event) {
+  window.goatcounter?.count({ path: event, title: event, event: true })
+}
+
 export default function BottomPanel({ data, loading, onRefresh, visibleLines, onToggleLine, nearestStation, onLocate, onResetLocation, locating, geoError }) {
   const [expanded, setExpanded] = useState(false)
   const [showAbout, setShowAbout] = useState(false)
@@ -21,12 +25,12 @@ export default function BottomPanel({ data, loading, onRefresh, visibleLines, on
     <div className="info-panel">
       <div className="info-panel-header">
         <div className="info-panel-title">
-          <button className={`logo-btn${showAbout ? " about-btn--active" : ""}`} onClick={() => setShowAbout(a => !a)} title="Sobre">
+          <button className={`logo-btn${showAbout ? " about-btn--active" : ""}`} onClick={() => { track('about'); setShowAbout(a => !a) }} title="Sobre">
             <img src="/logo.svg" alt="PM" width="24" height="24" />
           </button>
           <button
             className="info-panel-toggle"
-            onClick={() => setExpanded((e) => !e)}
+            onClick={() => { track('panel-toggle'); setExpanded((e) => !e) }}
           >
             <span className={`info-panel-arrow ${expanded ? "info-panel-arrow--open" : ""}`}>&#9650;</span>
             Próximos comboios
