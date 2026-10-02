@@ -60,9 +60,9 @@ export default function App() {
   return (
     <>
       {!hasData && (
-        <div className="loading-overlay">
+        <div className="loading-toast">
           <div className="loading-spinner" />
-          <span>A carregar dados...</span>
+          <span>A carregar...</span>
         </div>
       )}
       <MetroMap

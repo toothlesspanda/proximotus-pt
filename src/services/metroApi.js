@@ -9,6 +9,9 @@ async function getToken() {
   if (cachedToken && Date.now() < tokenExpiry) return cachedToken
   if (tokenPromise) return tokenPromise
 
+  const controller = new AbortController()
+  const timeout = setTimeout(() => controller.abort(), 8000)
+
   tokenPromise = fetch(`${BASE}/token`, {
     method: "POST",
     headers: {
@@ -16,6 +19,7 @@ async function getToken() {
       "Content-Type": "application/x-www-form-urlencoded",
     },
     body: "grant_type=client_credentials",
+    signal: controller.signal,
   })
     .then((res) => {
       if (!res.ok) throw new Error(`Token request failed: ${res.status}`)
@@ -31,6 +35,7 @@ async function getToken() {
       tokenPromise = null
       throw e
     })
+    .finally(() => clearTimeout(timeout))
 
   return tokenPromise
 }
