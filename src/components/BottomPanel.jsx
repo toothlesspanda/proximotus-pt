@@ -21,6 +21,9 @@ export default function BottomPanel({ data, loading, onRefresh, visibleLines, on
     <div className="info-panel">
       <div className="info-panel-header">
         <div className="info-panel-title">
+          <button className={`logo-btn${showAbout ? " about-btn--active" : ""}`} onClick={() => setShowAbout(a => !a)} title="Sobre">
+            <img src="/logo.svg" alt="PM" width="24" height="24" />
+          </button>
           <button
             className="info-panel-toggle"
             onClick={() => setExpanded((e) => !e)}
@@ -49,7 +52,6 @@ export default function BottomPanel({ data, loading, onRefresh, visibleLines, on
           >
             {locating ? "..." : geoError ? "!" : <svg viewBox="-24 -34 48 68" width="16" height="16"><path d="M0-30c-11 0-20 9-20 20C-20 1 0 30 0 30S20 1 20-10C20-21 11-30 0-30z" fill="currentColor" /><circle cx="0" cy="-10" r="8" fill="var(--color-surface)" /></svg>}
           </button>
-          <button className={`about-btn${showAbout ? " about-btn--active" : ""}`} onClick={() => setShowAbout(a => !a)} title="Sobre">?</button>
         </div>
       </div>
 
@@ -59,7 +61,7 @@ export default function BottomPanel({ data, loading, onRefresh, visibleLines, on
 
       {showAbout && (
         <div className="about-panel">
-          <h3>Proximotus</h3>
+          <img src="/logo-full.svg" alt="Proximotus" className="about-logo" />
           <p>Mapa interativo em tempo real do Metro de Lisboa.</p>
           <p>Projeto open source — mostra a posição estimada dos comboios e tempos de espera em cada estação, utilizando dados da API pública do Metropolitano de Lisboa.</p>
           <div className="about-links">

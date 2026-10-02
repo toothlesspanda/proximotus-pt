@@ -5,10 +5,4 @@
   <path d="M24 4 L24 44" stroke="#f6c700" stroke-width="10" fill="none" stroke-linecap="round"/>
   <!-- Pipe horizontal abaixo (verde) -->
   <path d="M4 32 L44 32" stroke="#00a651" stroke-width="10" fill="none" stroke-linecap="round"/>
-  <!-- Interchange -->
-  <circle cx="24" cy="14" r="5" fill="#1a1a2e" stroke="#fff" stroke-width="3"/>
-  <!-- Background escuro com margem -->
-  <rect x="6" y="8" width="36" height="32" rx="6" fill="rgba(0,0,0,0.5)"/>
-  <!-- PM text -->
-  <text x="24" y="30" text-anchor="middle" font-family="Arial, sans-serif" font-weight="900" font-size="22" fill="#fff" letter-spacing="-1">PM</text>
 </svg>

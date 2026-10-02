@@ -164,6 +164,10 @@ body {
   gap: 6px;
 }
 
+.logo-btn {
+  margin-left: 12px;
+}
+
 .info-panel-toggle {
   display: flex;
   align-items: center;
@@ -272,6 +276,19 @@ body {
   -webkit-tap-highlight-color: transparent;
 }
 .about-btn:hover { background: var(--color-border); }
+.logo-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  flex-shrink: 0;
+  -webkit-tap-highlight-color: transparent;
+  opacity: 0.8;
+}
+.logo-btn:hover { opacity: 1; }
 .about-btn--active { background: var(--color-border); color: var(--color-text); }
 .about-btn--error { color: var(--color-line-vermelha); font-weight: 700; }
 
@@ -290,6 +307,7 @@ body {
   line-height: 1.5;
   border-top: 1px solid var(--color-border);
 }
+.about-logo { height: 32px; width: auto; margin-bottom: 10px; }
 .about-panel h3 { font-size: 0.9rem; margin-bottom: 8px; }
 .about-panel p { margin-bottom: 8px; opacity: 0.8; }
 .about-links {

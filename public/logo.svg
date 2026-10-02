@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256">
+  <!-- Pipe horizontal que dobra para baixo (vermelha) -->
+  <path d="M20 75 L150 75 Q192 75 192 117 L192 236" stroke="#ee1c25" stroke-width="52" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Pipe vertical (amarela) -->
+  <path d="M128 20 L128 236" stroke="#f6c700" stroke-width="52" fill="none" stroke-linecap="round"/>
+  <!-- Pipe horizontal abaixo (verde) -->
+  <path d="M20 170 L236 170" stroke="#00a651" stroke-width="52" fill="none" stroke-linecap="round"/>
+  <!-- Interchange -->
+  <circle cx="128" cy="75" r="26" fill="#1a1a2e" stroke="#fff" stroke-width="16"/>
+  <!-- Background escuro com margem -->
+  <rect x="32" y="42" width="192" height="172" rx="24" fill="rgba(0,0,0,0.5)"/>
+  <!-- PM text -->
+  <text x="128" y="160" text-anchor="middle" font-family="Arial, sans-serif" font-weight="900" font-size="118" fill="#fff" letter-spacing="-5">PM</text>
+</svg>
