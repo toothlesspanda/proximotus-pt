@@ -70,7 +70,8 @@ export default function BottomPanel({ data, loading, onRefresh, visibleLines, on
           <p>Projeto open source — mostra a posição estimada dos comboios e tempos de espera em cada estação, utilizando dados da API pública do Metropolitano de Lisboa.</p>
           <div className="about-links">
             <a href="https://api.metrolisboa.pt" target="_blank" rel="noopener noreferrer">API Metro de Lisboa</a>
-            <a href="https://github.com" target="_blank" rel="noopener noreferrer">GitHub</a>
+            <a href="https://github.com/toothlesspanda/proximotus-pt" target="_blank" rel="noopener noreferrer">GitHub</a>
+            <a href="mailto:inesmatos.dev@proton.me?subject=Feedback Proximotus" onClick={() => track('feedback')}>Feedback</a>
           </div>
           <p className="about-disclaimer">Este projeto não é afiliado ao Metropolitano de Lisboa. Os dados são fornecidos pela API pública e podem não refletir a situação exata em tempo real.</p>
         </div>
