@@ -79,7 +79,7 @@ export function useMapControls() {
     if (!container) return
     const newScale = scaleRef.current * factor
     const init = initScaleRef.current
-    if (newScale < init * 0.2 || newScale > init * 3) return
+    if (newScale < init * 0.08 || newScale > init * 3) return
     scaleRef.current = newScale
 
     setViewBox((vb) => {
@@ -155,7 +155,7 @@ export function useMapControls() {
     setViewBox({ x: cx - w / 2, y: cy - h / 2, w, h })
   }, [])
 
-  const zoomToPoint = useCallback((svgX, svgY, zoomFactor = 0.35) => {
+  const zoomToPoint = useCallback((svgX, svgY, zoomFactor = 0.15) => {
     const container = containerRef.current
     if (!container || !initScaleRef.current) return
     const newScale = initScaleRef.current * zoomFactor

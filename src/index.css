@@ -424,6 +424,50 @@ body {
 .coord-train--stopped { background: var(--color-stopped); }
 .coord-train--near { background: #fff; }
 
+/* Geolocation help modal */
+.geo-help-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.geo-help-modal {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 20px 24px;
+  max-width: 380px;
+  width: 100%;
+  font-size: 0.8rem;
+  line-height: 1.6;
+}
+.geo-help-modal h3 { font-size: 0.95rem; margin-bottom: 8px; }
+.geo-help-modal p { opacity: 0.7; margin-bottom: 12px; }
+.geo-help-modal ol { padding-left: 20px; margin-bottom: 16px; }
+.geo-help-modal li { margin-bottom: 6px; }
+.geo-help-actions { display: flex; gap: 8px; }
+.geo-help-actions button {
+  flex: 1;
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid var(--color-border-light);
+  background: var(--color-line-azul);
+  color: #fff;
+  font-size: 0.8rem;
+  font-family: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+.geo-help-actions button:hover { opacity: 0.9; }
+.geo-help-actions .geo-help-dismiss {
+  background: none;
+  color: var(--color-text-muted);
+}
+
 /* Hide secondary columns on mobile by default */
 @media (max-width: 768px) {
   .coord-lines-stack .coord-secondary { display: none; }
