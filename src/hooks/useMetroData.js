@@ -20,71 +20,49 @@ function dedup(entries) {
   return Object.values(best)
 }
 
+const LINE_IDS = Object.keys(LINE_NAMES)
+
 export function useMetroData() {
   const [data, setData] = useState({})
   const [lineStatus, setLineStatus] = useState(null)
   const [refreshing, setRefreshing] = useState(true)
 
-  async function loadWaitTimes(cancelled) {
+  async function loadAll(cancelled) {
     setRefreshing(true)
 
-    try {
-      await getToken()
-    } catch (e) {
-      console.error("Error getting token:", e)
-      setRefreshing(false)
-      return
-    }
-
+    try { await getToken() } catch (e) { console.error("Error getting token:", e); return }
     if (cancelled.current) return
 
-    const lineIds = Object.keys(LINE_NAMES)
+    try {
+      const res = await fetchLineStatus()
+      if (!cancelled.current) setLineStatus(res.resposta || null)
+    } catch (e) { console.error("Error line status:", e) }
 
-    await Promise.all(
-      lineIds.map(lineId =>
-        fetchWaitTimes(LINE_NAMES[lineId])
-          .then(res => {
-            if (!cancelled.current) setData(prev => ({ ...prev, [lineId]: dedup(res.resposta || []) }))
-          })
-          .catch(e => console.error(`Error ${lineId}:`, e))
-      ),
-    )
+    for (const lineId of LINE_IDS) {
+      if (cancelled.current) return
+      try {
+        const res = await fetchWaitTimes(LINE_NAMES[lineId])
+        if (!cancelled.current) setData(prev => ({ ...prev, [lineId]: dedup(res.resposta || []) }))
+      } catch (e) { console.error(`Error ${lineId}:`, e) }
+    }
 
     if (!cancelled.current) setRefreshing(false)
   }
 
-  async function loadLineStatus(cancelled) {
-    try {
-      await getToken()
-      const res = await fetchLineStatus()
-      if (!cancelled.current) setLineStatus(res.resposta || null)
-    } catch (e) {
-      console.error("Error line status:", e)
-    }
-  }
-
   useEffect(() => {
     const cancelled = { current: false }
-    let waitTimer, statusTimer
-
-    async function waitLoop() {
-      await loadWaitTimes(cancelled)
-      if (!cancelled.current) waitTimer = setTimeout(waitLoop, 15000)
+    let timer
+    async function loop() {
+      await loadAll(cancelled)
+      if (!cancelled.current) timer = setTimeout(loop, 15000)
     }
-
-    async function statusLoop() {
-      await loadLineStatus(cancelled)
-      if (!cancelled.current) statusTimer = setTimeout(statusLoop, 60000)
-    }
-
-    waitLoop()
-    statusLoop()
-    return () => { cancelled.current = true; clearTimeout(waitTimer); clearTimeout(statusTimer) }
+    loop()
+    return () => { cancelled.current = true; clearTimeout(timer) }
   }, [])
 
   const refresh = () => {
     const cancelled = { current: false }
-    loadData(cancelled)
+    loadAll(cancelled)
   }
 
   return { data, lineStatus, loading: refreshing, refresh }
