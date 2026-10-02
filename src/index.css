@@ -201,6 +201,28 @@ body {
   gap: 8px;
 }
 
+/* Line status banner */
+.line-status-banner {
+  background: rgba(238, 28, 37, 0.15);
+  border-bottom: 1px solid var(--color-border);
+  padding: 6px 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 0.7rem;
+}
+.line-status-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.line-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
 /* Refresh button */
 .refresh-btn {
   background: none;
@@ -384,6 +406,7 @@ body {
   flex: 1 1 280px;
   padding: 0 12px;
   border-right: 1px solid var(--color-border);
+  margin-bottom: 8px;
 }
 .coord-lines-stack > .coord-line:last-child {
   border-right: none;
@@ -398,6 +421,20 @@ body {
 
 .coord-line-header h3 {
   font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.line-status-tag {
+  font-size: 0.6rem;
+  font-weight: 500;
+  opacity: 0.5;
+  color: var(--color-text-muted);
+}
+.line-status-tag--warn {
+  opacity: 1;
+  color: var(--color-line-vermelha);
+  font-weight: 700;
 }
 
 /* Pagination */

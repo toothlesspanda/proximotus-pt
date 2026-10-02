@@ -16,7 +16,7 @@ export default function App() {
     new Set(Object.keys(lines)),
   )
   const [theme, setTheme] = useState(() => localStorage.getItem("theme") || "dark")
-  const { data, loading, refresh } = useMetroData()
+  const { data, lineStatus, loading, refresh } = useMetroData()
   const geo = useGeolocation()
   const [zoomToPointFn, setZoomToPointFn] = useState(null)
 
@@ -81,7 +81,7 @@ export default function App() {
         nearestStation={geo.nearest}
         setZoomToPointFn={setZoomToPointFn}
       />
-      <BottomPanel data={data} loading={loading} onRefresh={refresh} visibleLines={visibleLines} onToggleLine={toggleLine} nearestStation={geo.nearest} onLocate={handleLocate} onResetLocation={handleResetLocation} locating={geo.locating} geoError={geo.error} />
+      <BottomPanel data={data} lineStatus={lineStatus} loading={loading} onRefresh={refresh} visibleLines={visibleLines} onToggleLine={toggleLine} nearestStation={geo.nearest} onLocate={handleLocate} onResetLocation={handleResetLocation} locating={geo.locating} geoError={geo.error} />
     </>
   )
 }

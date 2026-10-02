@@ -8,7 +8,7 @@ function track(event) {
   window.goatcounter?.count({ path: event, title: event, event: true })
 }
 
-export default function BottomPanel({ data, loading, onRefresh, visibleLines, onToggleLine, nearestStation, onLocate, onResetLocation, locating, geoError }) {
+export default function BottomPanel({ data, lineStatus, loading, onRefresh, visibleLines, onToggleLine, nearestStation, onLocate, onResetLocation, locating, geoError }) {
   const [expanded, setExpanded] = useState(false)
   const [showAbout, setShowAbout] = useState(false)
   const [showGeoHelp, setShowGeoHelp] = useState(false)
@@ -60,7 +60,7 @@ export default function BottomPanel({ data, loading, onRefresh, visibleLines, on
       </div>
 
       <div className="info-panel-body">
-        <StationTimelines data={data} loading={loading} expanded={expanded} />
+        <StationTimelines data={data} lineStatus={lineStatus} loading={loading} expanded={expanded} />
       </div>
 
       {showAbout && (

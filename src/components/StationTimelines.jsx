@@ -95,7 +95,7 @@ function renderLineTable(data, lineId, stations) {
   )
 }
 
-export default function StationTimelines({ data, loading, expanded }) {
+export default function StationTimelines({ data, lineStatus, loading, expanded }) {
   const [pages, setPages] = useState({ vermelha: 0, verde: 0, amarela: 0, azul: 0 })
   const [showSecondary, setShowSecondary] = useState(false)
 
@@ -131,7 +131,14 @@ export default function StationTimelines({ data, loading, expanded }) {
           return (
             <div key={lineId} className="coord-line">
               <div className="coord-line-header">
-                <h3 style={{ color: line.color }}>{line.label}</h3>
+                <h3 style={{ color: line.color }}>
+                  {line.label}
+                  {lineStatus && (
+                    <span className={`line-status-tag${lineStatus[lineId]?.trim() !== "Ok" ? " line-status-tag--warn" : ""}`}>
+                      {lineStatus[lineId]?.trim() || "—"}
+                    </span>
+                  )}
+                </h3>
                 {totalPages > 1 && (
                   <div className="coord-pager">
                     <button

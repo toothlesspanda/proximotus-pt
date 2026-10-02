@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { fetchWaitTimes } from "../services/metroApi"
+import { fetchWaitTimes, fetchLineStatus } from "../services/metroApi"
 
 const LINE_NAMES = {
   vermelha: "Vermelha",
@@ -22,10 +22,16 @@ function dedup(entries) {
 
 export function useMetroData() {
   const [data, setData] = useState({})
+  const [lineStatus, setLineStatus] = useState(null)
   const [refreshing, setRefreshing] = useState(true)
 
   function loadData(cancelled, isManual) {
     setRefreshing(true)
+
+    fetchLineStatus()
+      .then(res => { if (!cancelled.current) setLineStatus(res.resposta || null) })
+      .catch(e => console.error("Error line status:", e))
+
     const lineIds = Object.keys(LINE_NAMES)
     let chain = Promise.resolve()
     for (const lineId of lineIds) {
@@ -53,5 +59,5 @@ export function useMetroData() {
     loadData(cancelled, true)
   }
 
-  return { data, loading: refreshing, refresh }
+  return { data, lineStatus, loading: refreshing, refresh }
 }

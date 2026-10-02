@@ -40,6 +40,25 @@ async function getToken() {
   return tokenPromise
 }
 
+export async function fetchLineStatus() {
+  const token = await getToken()
+  const controller = new AbortController()
+  const timeout = setTimeout(() => controller.abort("Line status request timeout"), 10000)
+  try {
+    const res = await fetch(`${BASE}/estadoServicoML/1.0.1/estadoLinha/todos`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: "application/json",
+      },
+      signal: controller.signal,
+    })
+    if (!res.ok) throw new Error(`Line status: ${res.status}`)
+    return res.json()
+  } finally {
+    clearTimeout(timeout)
+  }
+}
+
 export async function fetchWaitTimes(lineName) {
   const token = await getToken()
   const controller = new AbortController()
