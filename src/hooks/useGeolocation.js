@@ -67,22 +67,39 @@ export function useGeolocation() {
       setLocating(false)
     }
 
-    const onError = (err) => {
+    const onFail = (err) => {
       localStorage.removeItem(GEO_KEY)
-      setError(err.message)
+      if (err.code === err.PERMISSION_DENIED) {
+        setError("Localização bloqueada. Ative nas definições do browser.")
+      } else {
+        setError("Não foi possível obter a localização. Tente novamente.")
+      }
       setLocating(false)
     }
 
-    // Try high accuracy first, fallback to low accuracy on timeout
-    navigator.geolocation.getCurrentPosition(onSuccess, (err) => {
-      if (err.code === err.TIMEOUT) {
-        navigator.geolocation.getCurrentPosition(onSuccess, onError, {
-          enableHighAccuracy: false, timeout: 15000, maximumAge: 120000,
-        })
-      } else {
-        onError(err)
-      }
-    }, { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 })
+    // Retry strategy: CoreLocation can temporarily fail (POSITION_UNAVAILABLE)
+    // We retry up to 3 times with increasing delays before giving up
+    let attempt = 0
+    const MAX_RETRIES = 3
+    const RETRY_DELAYS = [0, 1500, 3000]
+
+    function tryLocate() {
+      const isLastAttempt = attempt >= MAX_RETRIES - 1
+      const opts = attempt === 0
+        ? { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 }
+        : { enableHighAccuracy: false, timeout: 15000, maximumAge: 300000 }
+
+      navigator.geolocation.getCurrentPosition(onSuccess, (err) => {
+        if (err.code === err.PERMISSION_DENIED || isLastAttempt) {
+          onFail(err)
+        } else {
+          attempt++
+          setTimeout(tryLocate, RETRY_DELAYS[attempt])
+        }
+      }, opts)
+    }
+
+    tryLocate()
   }, [])
 
   const simulate = useCallback((lat, lon) => {

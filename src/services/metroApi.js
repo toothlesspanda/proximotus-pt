@@ -10,7 +10,7 @@ async function getToken() {
   if (tokenPromise) return tokenPromise
 
   const controller = new AbortController()
-  const timeout = setTimeout(() => controller.abort(), 8000)
+  const timeout = setTimeout(() => controller.abort("Token request timeout"), 8000)
 
   tokenPromise = fetch(`${BASE}/token`, {
     method: "POST",
@@ -43,7 +43,7 @@ async function getToken() {
 export async function fetchWaitTimes(lineName) {
   const token = await getToken()
   const controller = new AbortController()
-  const timeout = setTimeout(() => controller.abort(), 10000)
+  const timeout = setTimeout(() => controller.abort("Wait times request timeout"), 10000)
   try {
     const res = await fetch(`${BASE}/estadoServicoML/1.0.1/tempoEspera/Linha/${lineName}`, {
       headers: {
