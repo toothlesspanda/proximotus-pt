@@ -6,6 +6,7 @@ const MAP_CONTENT = { x: -1200, y: -400, w: 11000, h: 5600 }
 export function useMapControls() {
   const [viewBox, setViewBox] = useState({ ...MAP_CONTENT })
   const panRef = useRef({ isPanning: false, startX: 0, startY: 0 })
+  const pinchRef = useRef({ active: false, dist: 0 })
   const containerRef = useRef(null)
   const scaleRef = useRef(null)
   const initScaleRef = useRef(null)
@@ -72,14 +73,34 @@ export function useMapControls() {
     panRef.current.isPanning = false
   }, [])
 
+  const getTouchDist = (t1, t2) =>
+    Math.sqrt((t1.clientX - t2.clientX) ** 2 + (t1.clientY - t2.clientY) ** 2)
+
+  const getTouchCenter = (t1, t2) => ({
+    x: (t1.clientX + t2.clientX) / 2,
+    y: (t1.clientY + t2.clientY) / 2,
+  })
+
   const onTouchStart = useCallback((e) => {
-    if (e.touches.length === 1) {
+    if (e.touches.length === 2) {
+      panRef.current.isPanning = false
+      pinchRef.current = { active: true, dist: getTouchDist(e.touches[0], e.touches[1]) }
+    } else if (e.touches.length === 1) {
       const touch = e.touches[0]
       panRef.current = { isPanning: true, startX: touch.clientX, startY: touch.clientY }
     }
   }, [])
 
   const onTouchMove = useCallback((e) => {
+    if (e.touches.length === 2 && pinchRef.current.active) {
+      e.preventDefault()
+      const newDist = getTouchDist(e.touches[0], e.touches[1])
+      const factor = pinchRef.current.dist / newDist
+      pinchRef.current.dist = newDist
+      const center = getTouchCenter(e.touches[0], e.touches[1])
+      applyZoom(factor, center.x, center.y)
+      return
+    }
     if (!panRef.current.isPanning || e.touches.length !== 1) return
     e.preventDefault()
     const container = containerRef.current
@@ -90,10 +111,11 @@ export function useMapControls() {
     panRef.current.startX = touch.clientX
     panRef.current.startY = touch.clientY
     setViewBox((vb) => ({ ...vb, x: vb.x - dx, y: vb.y - dy }))
-  }, [])
+  }, [applyZoom])
 
   const onTouchEnd = useCallback(() => {
     panRef.current.isPanning = false
+    pinchRef.current.active = false
   }, [])
 
   const applyZoom = useCallback((factor, clientX, clientY) => {

@@ -199,8 +199,8 @@ body {
   flex-shrink: 0;
 }
 .refresh-btn:hover { background: var(--color-border); }
-.refresh-btn--loading { animation: spin 1s linear infinite; }
-@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+.refresh-icon { display: inline-block; }
+.refresh-icon--loading { animation: spin 1s linear infinite; }
 
 /* Legend dots */
 .legend {
@@ -256,12 +256,7 @@ body {
 }
 .about-btn:hover { background: var(--color-border); }
 .about-btn--active { background: var(--color-border); color: var(--color-text); }
-.geo-error {
-  color: var(--color-line-vermelha);
-  font-size: 0.65rem;
-  font-weight: 700;
-  cursor: help;
-}
+.about-btn--error { color: var(--color-line-vermelha); font-weight: 700; }
 
 .locating {
   animation: blink 0.8s ease-in-out infinite;

@@ -21,7 +21,7 @@ export default function BottomPanel({ data, loading, onRefresh, visibleLines, on
             <span className={`info-panel-arrow ${expanded ? "info-panel-arrow--open" : ""}`}>&#9650;</span>
             Próximos comboios
           </button>
-          <button className={`refresh-btn${loading ? " refresh-btn--loading" : ""}`} onClick={onRefresh} title="Atualizar">&#8635;</button>
+          <button className="refresh-btn" onClick={onRefresh} title="Atualizar"><span className={loading ? "refresh-icon refresh-icon--loading" : "refresh-icon"}>&#8635;</span></button>
         </div>
         <div className="info-panel-right">
           <div className="legend">
@@ -36,13 +36,12 @@ export default function BottomPanel({ data, loading, onRefresh, visibleLines, on
             ))}
           </div>
           <button
-            className={`about-btn${nearestStation ? " about-btn--active" : ""}${locating ? " locating" : ""}`}
-            onClick={() => nearestStation ? onResetLocation() : onLocate()}
+            className={`about-btn${nearestStation ? " about-btn--active" : ""}${geoError ? " about-btn--error" : ""}${locating ? " locating" : ""}`}
+            onClick={() => geoError ? alert(geoError) : nearestStation ? onResetLocation() : onLocate()}
             title={nearestStation ? "Limpar localização" : "A minha localização"}
           >
-            {locating ? "..." : <svg viewBox="-24 -34 48 68" width="16" height="16"><path d="M0-30c-11 0-20 9-20 20C-20 1 0 30 0 30S20 1 20-10C20-21 11-30 0-30z" fill="currentColor" /><circle cx="0" cy="-10" r="8" fill="var(--color-surface)" /></svg>}
+            {locating ? "..." : geoError ? "!" : <svg viewBox="-24 -34 48 68" width="16" height="16"><path d="M0-30c-11 0-20 9-20 20C-20 1 0 30 0 30S20 1 20-10C20-21 11-30 0-30z" fill="currentColor" /><circle cx="0" cy="-10" r="8" fill="var(--color-surface)" /></svg>}
           </button>
-          {geoError && <span className="geo-error" title={geoError}>!</span>}
           <button className={`about-btn${showAbout ? " about-btn--active" : ""}`} onClick={() => setShowAbout(a => !a)} title="Sobre">?</button>
         </div>
       </div>
