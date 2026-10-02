@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { fetchWaitTimes, fetchLineStatus } from "../services/metroApi"
+import { getToken, fetchWaitTimes, fetchLineStatus } from "../services/metroApi"
 
 const LINE_NAMES = {
   vermelha: "Vermelha",
@@ -25,38 +25,66 @@ export function useMetroData() {
   const [lineStatus, setLineStatus] = useState(null)
   const [refreshing, setRefreshing] = useState(true)
 
-  function loadData(cancelled, isManual) {
+  async function loadWaitTimes(cancelled) {
     setRefreshing(true)
 
-    fetchLineStatus()
-      .then(res => { if (!cancelled.current) setLineStatus(res.resposta || null) })
-      .catch(e => console.error("Error line status:", e))
+    try {
+      await getToken()
+    } catch (e) {
+      console.error("Error getting token:", e)
+      setRefreshing(false)
+      return
+    }
+
+    if (cancelled.current) return
 
     const lineIds = Object.keys(LINE_NAMES)
-    let chain = Promise.resolve()
-    for (const lineId of lineIds) {
-      chain = chain.then(() => {
-        if (cancelled.current) return
-        return fetchWaitTimes(LINE_NAMES[lineId])
+
+    await Promise.all(
+      lineIds.map(lineId =>
+        fetchWaitTimes(LINE_NAMES[lineId])
           .then(res => {
             if (!cancelled.current) setData(prev => ({ ...prev, [lineId]: dedup(res.resposta || []) }))
           })
           .catch(e => console.error(`Error ${lineId}:`, e))
-      })
+      ),
+    )
+
+    if (!cancelled.current) setRefreshing(false)
+  }
+
+  async function loadLineStatus(cancelled) {
+    try {
+      await getToken()
+      const res = await fetchLineStatus()
+      if (!cancelled.current) setLineStatus(res.resposta || null)
+    } catch (e) {
+      console.error("Error line status:", e)
     }
-    chain.then(() => { if (!cancelled.current) setRefreshing(false) })
   }
 
   useEffect(() => {
     const cancelled = { current: false }
-    loadData(cancelled, false)
-    const interval = setInterval(() => loadData(cancelled, false), 5000)
-    return () => { cancelled.current = true; clearInterval(interval) }
+    let waitTimer, statusTimer
+
+    async function waitLoop() {
+      await loadWaitTimes(cancelled)
+      if (!cancelled.current) waitTimer = setTimeout(waitLoop, 15000)
+    }
+
+    async function statusLoop() {
+      await loadLineStatus(cancelled)
+      if (!cancelled.current) statusTimer = setTimeout(statusLoop, 60000)
+    }
+
+    waitLoop()
+    statusLoop()
+    return () => { cancelled.current = true; clearTimeout(waitTimer); clearTimeout(statusTimer) }
   }, [])
 
   const refresh = () => {
     const cancelled = { current: false }
-    loadData(cancelled, true)
+    loadData(cancelled)
   }
 
   return { data, lineStatus, loading: refreshing, refresh }

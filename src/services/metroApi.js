@@ -5,7 +5,7 @@ let cachedToken = null
 let tokenExpiry = 0
 let tokenPromise = null
 
-async function getToken() {
+export async function getToken() {
   if (cachedToken && Date.now() < tokenExpiry) return cachedToken
   if (tokenPromise) return tokenPromise
 

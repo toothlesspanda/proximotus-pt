@@ -226,12 +226,11 @@ body {
 /* Refresh button */
 .refresh-btn {
   background: none;
-  border: 1px solid var(--color-border-light);
+  border: none;
   color: var(--color-text);
   font-size: 1.1rem;
   width: 36px;
   height: 36px;
-  border-radius: 6px;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -242,6 +241,7 @@ body {
 .refresh-btn:hover { background: var(--color-border); }
 .refresh-icon { display: inline-block; }
 .refresh-icon--loading { animation: spin 1s linear infinite; }
+.refresh-hint { font-size: 0.6rem; color: var(--color-text-secondary); margin-left: 4px; opacity: 0.6; }
 
 /* Legend dots */
 .legend {

@@ -35,7 +35,7 @@ export default function BottomPanel({ data, lineStatus, loading, onRefresh, visi
             <span className={`info-panel-arrow ${expanded ? "info-panel-arrow--open" : ""}`}>&#9650;</span>
             Próximos comboios
           </button>
-          <button className="refresh-btn" onClick={onRefresh} title="Atualizar"><span className={loading ? "refresh-icon refresh-icon--loading" : "refresh-icon"}>&#8635;</span></button>
+          <button className="refresh-btn" onClick={onRefresh} title="Atualizar"><span className={loading ? "refresh-icon refresh-icon--loading" : "refresh-icon"}>&#8635;</span></button><span className="refresh-hint">atualiza a cada 15s</span>
         </div>
         <div className="info-panel-right">
           <div className="legend">
