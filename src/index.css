@@ -496,6 +496,10 @@ body {
 .coord-train { font-size: 0.75rem; display: inline-block; line-height: 1; }
 .coord-train--stopped { color: var(--color-stopped); }
 .coord-train--near { color: #fff; }
+.coord-line .coord-group-header { text-align: center; font-weight: 600; padding: 4px 0; border-bottom: none; vertical-align: middle; }
+.coord-arrow { margin-right: 4px; }
+.coord-line tfoot th { border-bottom: none; }
+.coord-line tfoot tr:first-child th { border-top: 1px solid var(--color-border); }
 
 /* Geolocation help modal */
 .geo-help-overlay {

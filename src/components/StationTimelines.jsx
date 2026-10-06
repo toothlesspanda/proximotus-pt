@@ -58,7 +58,7 @@ function renderTimeCell(t, isPrimary, comboio) {
 function terminalName(lineId, dir) {
   const label = DESTINATIONS[lineId][dir].label
   const station = lines[lineId].stations.find(s => s.stopId === label)
-  return station ? shortName(station.name) : label
+  return station ? station.name : label
 }
 
 function renderLineTable(data, lineId, stations) {
@@ -66,12 +66,16 @@ function renderLineTable(data, lineId, stations) {
     <table>
       <thead>
         <tr>
-          <th>Estação</th>
+          <th rowSpan={2}>Estação</th>
+          <th className="coord-group-header" colSpan={3}><span className="coord-arrow">↓</span>{terminalName(lineId, "a")}</th>
+          <th className="coord-group-header" colSpan={3}><span className="coord-arrow">↑</span>{terminalName(lineId, "b")}</th>
+        </tr>
+        <tr>
           <th className="coord-indicator" />
-          <th className="coord-num coord-primary">↓{terminalName(lineId, "a")}</th>
+          <th className="coord-num coord-primary">1o</th>
           <th className="coord-num coord-secondary">2o</th>
           <th className="coord-indicator" />
-          <th className="coord-num coord-primary">↑{terminalName(lineId, "b")}</th>
+          <th className="coord-num coord-primary">1o</th>
           <th className="coord-num coord-secondary">2o</th>
         </tr>
       </thead>
@@ -96,13 +100,17 @@ function renderLineTable(data, lineId, stations) {
       </tbody>
       <tfoot>
         <tr>
-          <th>Estação</th>
+          <th rowSpan={2}>Estação</th>
           <th className="coord-indicator" />
-          <th className="coord-num coord-primary">↓{terminalName(lineId, "a")}</th>
+          <th className="coord-num coord-primary">1o</th>
           <th className="coord-num coord-secondary">2o</th>
           <th className="coord-indicator" />
-          <th className="coord-num coord-primary">↑{terminalName(lineId, "b")}</th>
+          <th className="coord-num coord-primary">1o</th>
           <th className="coord-num coord-secondary">2o</th>
+        </tr>
+        <tr>
+          <th className="coord-group-header" colSpan={3}><span className="coord-arrow">↓</span>{terminalName(lineId, "a")}</th>
+          <th className="coord-group-header" colSpan={3}><span className="coord-arrow">↑</span>{terminalName(lineId, "b")}</th>
         </tr>
       </tfoot>
     </table>
@@ -133,7 +141,7 @@ export default function StationTimelines({ data, lineStatus, loading, expanded, 
         <span><span className="coord-train coord-train--near">▼▲</span> a chegar</span>
         <span className="coord-legend-stop">stop = parado</span>
         <button className="coord-secondary-toggle" onClick={() => setShowSecondary(s => !s)}>
-          {showSecondary ? "−" : "+"} 2º/3º
+          {showSecondary ? "−" : "+"} 2º
         </button>
       </div>
       <div className={`coord-lines-stack${showSecondary ? " show-secondary" : ""}`}>
