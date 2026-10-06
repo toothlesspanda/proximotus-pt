@@ -493,9 +493,9 @@ body {
 .coord-indicator { width: 10px; padding: 0 1px; text-align: center; }
 .coord-line td:nth-child(6),
 .coord-line th:nth-child(6) { border-left: 1px dotted var(--color-text-muted); }
-.coord-train { font-size: 0.5rem; color: transparent; display: inline-block; width: 8px; height: 8px; border-radius: 2px; border: none; }
-.coord-train--stopped { background: var(--color-stopped); }
-.coord-train--near { background: #fff; }
+.coord-train { font-size: 0.75rem; display: inline-block; line-height: 1; }
+.coord-train--stopped { color: var(--color-stopped); }
+.coord-train--near { color: #fff; }
 
 /* Geolocation help modal */
 .geo-help-overlay {

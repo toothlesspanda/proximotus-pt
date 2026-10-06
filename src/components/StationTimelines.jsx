@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { lines } from "../data/lines"
-import { DESTINATIONS, PAGE_SIZE } from "../constants"
+import { DESTINATIONS } from "../constants"
 import { isAtStation, formatTime, shortName } from "../utils"
 
 function getStationEntry(data, lineId, stopId, dir, isTerminal) {
@@ -35,14 +35,14 @@ function getStoppedStations(data, lineId) {
   return stopped.length > 0 ? stopped.join(", ") : "—"
 }
 
-function renderIndicator(entry) {
+function renderIndicator(entry, arrow) {
   if (!entry) return <td className="coord-indicator" />
   const tempo = entry.tempoChegada1
   const atStn = isAtStation(tempo)
   const secs = typeof tempo === "number" ? tempo : parseInt(tempo, 10)
   const near = !atStn && !isNaN(secs) && secs <= 60
-  if (atStn) return <td className="coord-indicator"><span className="coord-train coord-train--stopped">■</span></td>
-  if (near) return <td className="coord-indicator"><span className="coord-train coord-train--near">■</span></td>
+  if (atStn) return <td className="coord-indicator"><span className="coord-train coord-train--stopped">{arrow}</span></td>
+  if (near) return <td className="coord-indicator"><span className="coord-train coord-train--near">{arrow}</span></td>
   return <td className="coord-indicator" />
 }
 
@@ -84,22 +84,32 @@ function renderLineTable(data, lineId, stations) {
           return (
             <tr key={s.stopId}>
               <td className="coord-station" title={s.name}>{shortName(s.name)}</td>
-              {renderIndicator(eA)}
+              {renderIndicator(eA, "▼")}
               {renderTimeCell(isTerminalA ? undefined : eA?.tempoChegada1, true, eA?.comboio)}
               {renderTimeCell(isTerminalA ? undefined : eA?.tempoChegada2, false, eA?.comboio2)}
-              {renderIndicator(eB)}
+              {renderIndicator(eB, "▲")}
               {renderTimeCell(isTerminalB ? undefined : eB?.tempoChegada1, true, eB?.comboio)}
               {renderTimeCell(isTerminalB ? undefined : eB?.tempoChegada2, false, eB?.comboio2)}
             </tr>
           )
         })}
       </tbody>
+      <tfoot>
+        <tr>
+          <th>Estação</th>
+          <th className="coord-indicator" />
+          <th className="coord-num coord-primary">↓{terminalName(lineId, "a")}</th>
+          <th className="coord-num coord-secondary">2o</th>
+          <th className="coord-indicator" />
+          <th className="coord-num coord-primary">↑{terminalName(lineId, "b")}</th>
+          <th className="coord-num coord-secondary">2o</th>
+        </tr>
+      </tfoot>
     </table>
   )
 }
 
 export default function StationTimelines({ data, lineStatus, loading, expanded, visibleLines }) {
-  const [pages, setPages] = useState({ vermelha: 0, verde: 0, amarela: 0, azul: 0 })
   const [showSecondary, setShowSecondary] = useState(false)
 
   if (!expanded) {
@@ -119,8 +129,8 @@ export default function StationTimelines({ data, lineStatus, loading, expanded, 
   return (
     <>
       <div className="coord-legend">
-        <span><span className="coord-train coord-train--stopped" /> na estação</span>
-        <span><span className="coord-train coord-train--near" /> &lt;1 min</span>
+        <span><span className="coord-train coord-train--stopped">▼▲</span> na estação</span>
+        <span><span className="coord-train coord-train--near">▼▲</span> a chegar</span>
         <span className="coord-legend-stop">stop = parado</span>
         <button className="coord-secondary-toggle" onClick={() => setShowSecondary(s => !s)}>
           {showSecondary ? "−" : "+"} 2º/3º
@@ -132,9 +142,6 @@ export default function StationTimelines({ data, lineStatus, loading, expanded, 
           const bVis = visibleLines?.has(b) ? 0 : 1
           return aVis - bVis
         }).map(([lineId, line]) => {
-          const page = pages[lineId]
-          const totalPages = Math.ceil(line.stations.length / PAGE_SIZE)
-          const visible = line.stations.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE)
           return (
             <div key={lineId} className="coord-line">
               <div className="coord-line-header">
@@ -146,21 +153,8 @@ export default function StationTimelines({ data, lineStatus, loading, expanded, 
                     </span>
                   )}
                 </h3>
-                {totalPages > 1 && (
-                  <div className="coord-pager">
-                    <button
-                      disabled={page === 0}
-                      onClick={() => setPages(p => ({ ...p, [lineId]: p[lineId] - 1 }))}
-                    >&#8249;</button>
-                    <span>{page + 1}/{totalPages}</span>
-                    <button
-                      disabled={page >= totalPages - 1}
-                      onClick={() => setPages(p => ({ ...p, [lineId]: p[lineId] + 1 }))}
-                    >&#8250;</button>
-                  </div>
-                )}
               </div>
-              {renderLineTable(data, lineId, visible)}
+              {renderLineTable(data, lineId, line.stations)}
             </div>
           )
         })}
