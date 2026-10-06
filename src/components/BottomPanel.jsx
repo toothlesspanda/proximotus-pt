@@ -60,7 +60,7 @@ export default function BottomPanel({ data, lineStatus, loading, onRefresh, visi
       </div>
 
       <div className="info-panel-body">
-        <StationTimelines data={data} lineStatus={lineStatus} loading={loading} expanded={expanded} />
+        <StationTimelines data={data} lineStatus={lineStatus} loading={loading} expanded={expanded} visibleLines={visibleLines} />
       </div>
 
       {showAbout && (

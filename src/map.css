@@ -104,6 +104,7 @@
 .train-arrow { fill: currentColor; }
 .train-marker--stopped .train-body { fill: var(--color-train-stopped-fill); stroke: var(--color-train-stopped-stroke); stroke-width: 16; }
 .train-marker--stopped .train-arrow { fill: var(--color-train-stopped-stroke); }
+.train-label { fill: currentColor; font-weight: 700; pointer-events: none; }
 
 /* Station time badges */
 .station-times-layer { pointer-events: all; }

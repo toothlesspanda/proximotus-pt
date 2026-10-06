@@ -46,12 +46,19 @@ function renderIndicator(entry) {
   return <td className="coord-indicator" />
 }
 
-function renderTimeCell(t, isPrimary) {
+function renderTimeCell(t, isPrimary, comboio) {
   if (t == null) return <td className={`coord-num${isPrimary ? " coord-primary" : " coord-secondary"}`}>—</td>
   const atStn = isAtStation(t)
   const cls = `coord-num${isPrimary ? " coord-primary" : " coord-secondary"}${atStn ? " coord-here" : ""}`
-  if (atStn) return <td className={cls}>stop</td>
-  return <td className={cls}>{formatTime(t) ?? "—"}</td>
+  const label = comboio ? <span className="coord-train-id">{comboio}</span> : null
+  if (atStn) return <td className={cls}>{label}stop</td>
+  return <td className={cls}>{label}{formatTime(t) ?? "—"}</td>
+}
+
+function terminalName(lineId, dir) {
+  const label = DESTINATIONS[lineId][dir].label
+  const station = lines[lineId].stations.find(s => s.stopId === label)
+  return station ? shortName(station.name) : label
 }
 
 function renderLineTable(data, lineId, stations) {
@@ -61,13 +68,11 @@ function renderLineTable(data, lineId, stations) {
         <tr>
           <th>Estação</th>
           <th className="coord-indicator" />
-          <th className="coord-num coord-primary">↓{DESTINATIONS[lineId].a.label}</th>
+          <th className="coord-num coord-primary">↓{terminalName(lineId, "a")}</th>
           <th className="coord-num coord-secondary">2o</th>
-          <th className="coord-num coord-secondary">3o</th>
           <th className="coord-indicator" />
-          <th className="coord-num coord-primary">↑{DESTINATIONS[lineId].b.label}</th>
+          <th className="coord-num coord-primary">↑{terminalName(lineId, "b")}</th>
           <th className="coord-num coord-secondary">2o</th>
-          <th className="coord-num coord-secondary">3o</th>
         </tr>
       </thead>
       <tbody>
@@ -80,13 +85,11 @@ function renderLineTable(data, lineId, stations) {
             <tr key={s.stopId}>
               <td className="coord-station" title={s.name}>{shortName(s.name)}</td>
               {renderIndicator(eA)}
-              {renderTimeCell(isTerminalA ? undefined : eA?.tempoChegada1, true)}
-              {renderTimeCell(isTerminalA ? undefined : eA?.tempoChegada2, false)}
-              {renderTimeCell(isTerminalA ? undefined : eA?.tempoChegada3, false)}
+              {renderTimeCell(isTerminalA ? undefined : eA?.tempoChegada1, true, eA?.comboio)}
+              {renderTimeCell(isTerminalA ? undefined : eA?.tempoChegada2, false, eA?.comboio2)}
               {renderIndicator(eB)}
-              {renderTimeCell(isTerminalB ? undefined : eB?.tempoChegada1, true)}
-              {renderTimeCell(isTerminalB ? undefined : eB?.tempoChegada2, false)}
-              {renderTimeCell(isTerminalB ? undefined : eB?.tempoChegada3, false)}
+              {renderTimeCell(isTerminalB ? undefined : eB?.tempoChegada1, true, eB?.comboio)}
+              {renderTimeCell(isTerminalB ? undefined : eB?.tempoChegada2, false, eB?.comboio2)}
             </tr>
           )
         })}
@@ -95,7 +98,7 @@ function renderLineTable(data, lineId, stations) {
   )
 }
 
-export default function StationTimelines({ data, lineStatus, loading, expanded }) {
+export default function StationTimelines({ data, lineStatus, loading, expanded, visibleLines }) {
   const [pages, setPages] = useState({ vermelha: 0, verde: 0, amarela: 0, azul: 0 })
   const [showSecondary, setShowSecondary] = useState(false)
 
@@ -124,7 +127,11 @@ export default function StationTimelines({ data, lineStatus, loading, expanded }
         </button>
       </div>
       <div className={`coord-lines-stack${showSecondary ? " show-secondary" : ""}`}>
-        {Object.entries(lines).map(([lineId, line]) => {
+        {Object.entries(lines).sort(([a], [b]) => {
+          const aVis = visibleLines?.has(a) ? 0 : 1
+          const bVis = visibleLines?.has(b) ? 0 : 1
+          return aVis - bVis
+        }).map(([lineId, line]) => {
           const page = pages[lineId]
           const totalPages = Math.ceil(line.stations.length / PAGE_SIZE)
           const visible = line.stations.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE)

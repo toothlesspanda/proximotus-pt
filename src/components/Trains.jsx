@@ -110,6 +110,17 @@ export default function Trains({ metroData, visibleLines }) {
               points={`${50 * scale},0 ${-25 * scale},${-35 * scale} ${-25 * scale},${35 * scale}`}
               className="train-arrow"
             />
+            <text
+              x={0}
+              y={-50 * scale}
+              textAnchor="middle"
+              dominantBaseline="auto"
+              className="train-label"
+              fontSize={50 * scale}
+              transform={`rotate(${-train.angle})`}
+            >
+              {train.trainId}
+            </text>
           </g>
         )
       })}

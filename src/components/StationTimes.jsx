@@ -87,6 +87,7 @@ export default function StationTimes({ metroData, expandedStation, onToggleExpan
                       <text x={badgeX - 20} y={y} className={`badge-value${at ? " badge-value--stopped" : ""}`}>
                         {at ? "stop" : t ?? "—"}
                       </text>
+                      {d.entries[0]?.comboio && <text x={badgeX + 100} y={y} className="badge-dim">{d.entries[0].comboio}</text>}
                     </g>
                   )
                 })}
@@ -111,7 +112,7 @@ export default function StationTimes({ metroData, expandedStation, onToggleExpan
                 return (
                   <g key={i}>
                     <text x={badgeX - badgeW / 2 + 30} y={y} className="badge-dim">
-                      {i + 1}o
+                      {e.comboio}
                     </text>
                     <text x={badgeX + badgeW / 2 - 30} y={y} className={`badge-value${at ? " badge-value--stopped" : ""}`} textAnchor="end">
                       {at ? "stop" : formatTime(e.time) ?? "—"}
