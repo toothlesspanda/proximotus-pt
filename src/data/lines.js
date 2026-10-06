@@ -43,10 +43,10 @@ export const lines = {
     stations: [
       { id: 13, stopId: "TE", name: "Telheiras", x: 2000, y: 3500, labelPos: "left", terminal: true, lat: 38.7576, lon: -9.1686 },
       { id: 14, stopId: "CG", name: "Campo Grande", x: 3000, y: 3000, labelPos: "below", lat: 38.7584, lon: -9.1572 },
-      { id: 15, stopId: "AM", name: "Alvalade", x: 4100, y: 1500, labelPos: "above", lat: 38.7520, lon: -9.1452 },
+      { id: 15, stopId: "AL", name: "Alvalade", x: 4100, y: 1500, labelPos: "above", lat: 38.7520, lon: -9.1452 },
       { id: 16, stopId: "RM", name: "Roma", x: 4800, y: 1500, labelPos: "above", lat: 38.7472, lon: -9.1426 },
       { id: 17, stopId: "AE", name: "Areeiro", x: 5500, y: 1500, labelPos: "above", lat: 38.7413, lon: -9.1365 },
-      { id: 18, stopId: "AL", name: "Alameda", x: 6500, y: 1500, labelPos: "above", lat: 38.7370, lon: -9.1335 },
+      { id: 18, stopId: "AM", name: "Alameda", x: 6500, y: 1500, labelPos: "above", lat: 38.7370, lon: -9.1335 },
       { id: 19, stopId: "AR", name: "Arroios", x: 7000, y: 1500, labelPos: "above", lat: 38.7319, lon: -9.1350 },
       { id: 20, stopId: "AN", name: "Anjos", x: 7500, y: 1500, labelPos: "above", lat: 38.7265, lon: -9.1365 },
       { id: 21, stopId: "IN", name: "Intendente", x: 8000, y: 1500, labelPos: "above", lat: 38.7232, lon: -9.1373 },
@@ -123,7 +123,7 @@ export const interchanges = [
   [["azul", "MP"], ["amarela", "MP"]],
   [["azul", "SS"], ["vermelha", "SS"]],
   [["amarela", "SA"], ["vermelha", "SA"]],
-  [["verde", "AL"], ["vermelha", "AM"]],
+  [["verde", "AM"], ["vermelha", "AM"]],
   [["azul", "BC"], ["verde", "BC"]],
 ]
 

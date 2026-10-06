@@ -13,7 +13,6 @@ function getEntries(data, lineId, stopId, dir) {
   const results = []
   if (entry.tempoChegada1 != null) results.push({ time: entry.tempoChegada1, comboio: entry.comboio })
   if (entry.tempoChegada2 != null) results.push({ time: entry.tempoChegada2, comboio: entry.comboio2 })
-  if (entry.tempoChegada3 != null) results.push({ time: entry.tempoChegada3, comboio: entry.comboio3 })
   return results
 }
 
@@ -109,12 +108,13 @@ export default function StationTimes({ metroData, expandedStation, onToggleExpan
               const renderRow = (e, i, baseY) => {
                 const at = isAtStation(e.time)
                 const y = baseY + (i + 1) * rowH
+                const secondary = i > 0
                 return (
-                  <g key={i}>
+                  <g key={i} opacity={secondary ? 0.45 : 1}>
                     <text x={badgeX - badgeW / 2 + 30} y={y} className="badge-dim">
                       {e.comboio}
                     </text>
-                    <text x={badgeX + badgeW / 2 - 30} y={y} className={`badge-value${at ? " badge-value--stopped" : ""}`} textAnchor="end">
+                    <text x={badgeX + badgeW / 2 - 30} y={y} className={`badge-value${at ? " badge-value--stopped" : ""}`} textAnchor="end" fontSize={secondary ? 38 : undefined}>
                       {at ? "stop" : formatTime(e.time) ?? "—"}
                     </text>
                   </g>
@@ -156,7 +156,7 @@ export default function StationTimes({ metroData, expandedStation, onToggleExpan
                         <text x={badgeX - badgeW / 2 + 30} y={sectionY + rowH} className="badge-dir" fill={line.color}>
                           {arrow}{d.label}
                         </text>
-                        {d.entries.slice(0, 3).map((e, i) => renderRow(e, i, sectionY + rowH))}
+                        {d.entries.slice(0, 2).map((e, i) => renderRow(e, i, sectionY + rowH))}
                       </g>
                     )
                   })}
