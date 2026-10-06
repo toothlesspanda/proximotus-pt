@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="pt">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -8,17 +8,36 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="theme-color" content="#1a1a2e" />
     <meta name="mobile-web-app-capable" content="yes" />
-    <meta name="description" content="Mapa interativo em tempo real do Metro de Lisboa" />
-    <meta property="og:title" content="Proximotus" />
-    <meta property="og:description" content="Mapa interativo em tempo real do Metro de Lisboa" />
+    <title>Proximotus — Metro de Lisboa em tempo real</title>
+    <meta name="description" content="Mapa interativo em tempo real do Metro de Lisboa. Veja a posicao estimada dos comboios, tempos de espera em cada estacao e o estado de servico das linhas Azul, Amarela, Verde e Vermelha." />
+    <link rel="canonical" href="https://proximotus.netlify.app/" />
+    <link rel="manifest" href="/manifest.json" />
+    <!-- Open Graph -->
+    <meta property="og:title" content="Proximotus — Metro de Lisboa em tempo real" />
+    <meta property="og:description" content="Mapa interativo em tempo real do Metro de Lisboa. Posicao dos comboios, tempos de espera e estado de servico." />
     <meta property="og:image" content="https://proximotus.netlify.app/og-image.png" />
-    <meta property="og:url" content="https://proximotus.netlify.app" />
+    <meta property="og:url" content="https://proximotus.netlify.app/" />
     <meta property="og:type" content="website" />
+    <meta property="og:locale" content="pt_PT" />
+    <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Proximotus" />
-    <meta name="twitter:description" content="Mapa interativo em tempo real do Metro de Lisboa" />
+    <meta name="twitter:title" content="Proximotus — Metro de Lisboa em tempo real" />
+    <meta name="twitter:description" content="Mapa interativo em tempo real do Metro de Lisboa. Posicao dos comboios, tempos de espera e estado de servico." />
     <meta name="twitter:image" content="https://proximotus.netlify.app/og-image.png" />
-    <title>Proximotus</title>
+    <!-- Schema.org -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Proximotus",
+      "url": "https://proximotus.netlify.app",
+      "description": "Mapa interativo em tempo real do Metro de Lisboa com posicao estimada dos comboios e tempos de espera.",
+      "applicationCategory": "TravelApplication",
+      "operatingSystem": "All",
+      "inLanguage": "pt",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "EUR" }
+    }
+    </script>
   </head>
   <body>
     <div id="root"></div>

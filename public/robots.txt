@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://proximotus.netlify.app/sitemap.xml
