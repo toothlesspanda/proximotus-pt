@@ -553,7 +553,14 @@ body {
   flex-shrink: 0;
 }
 
-.trip-field input {
+/* Autocomplete */
+.ac {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+}
+.ac-input {
+  width: 100%;
   background: var(--color-surface);
   color: var(--color-text);
   border: 1px solid var(--color-border-light);
@@ -561,12 +568,38 @@ body {
   padding: 4px 8px;
   font-size: 0.8rem;
   font-family: inherit;
-  flex: 1;
-  min-width: 0;
+  box-sizing: border-box;
 }
-.trip-field input::placeholder {
+.ac-input::placeholder {
   color: var(--color-text-muted);
   opacity: 0.6;
+}
+.ac-list {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  max-height: 180px;
+  overflow-y: auto;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-light);
+  border-radius: 6px;
+  margin: 4px 0 0;
+  padding: 4px 0;
+  list-style: none;
+  z-index: 1001;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+.ac-option {
+  padding: 5px 10px;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+.ac-option:hover {
+  background: color-mix(in srgb, var(--color-text) 10%, transparent);
+}
+.ac-option--selected {
+  font-weight: 600;
 }
 
 .trip-routes {

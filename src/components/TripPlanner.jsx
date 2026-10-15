@@ -1,5 +1,6 @@
 import { useState, useMemo, useEffect } from "react"
 import { findAllRoutes, estimateTotal, getWaitTime, getAllStations } from "../routeFinder"
+import Autocomplete from "./Autocomplete"
 
 const allStations = getAllStations()
 
@@ -8,23 +9,32 @@ function formatMins(secs) {
   return m <= 1 ? "~1 min" : `~${m} min`
 }
 
-function resolveStopId(name) {
-  const match = allStations.find(s => s.name === name)
-  return match ? match.stopId : ""
-}
-
 export default function TripPlanner({ nearestStation, data }) {
-  const [originInput, setOriginInput] = useState("")
+  const [originName, setOriginName] = useState("")
   const [originStopId, setOriginStopId] = useState("")
-  const [destInput, setDestInput] = useState("")
+  const [destName, setDestName] = useState("")
   const [destStopId, setDestStopId] = useState("")
 
   useEffect(() => {
     if (nearestStation?.station) {
-      setOriginInput(nearestStation.station.name)
+      setOriginName(nearestStation.station.name)
       setOriginStopId(nearestStation.station.stopId)
     }
   }, [nearestStation])
+
+  const originOptions = useMemo(() =>
+    allStations
+      .filter(s => s.stopId !== destStopId)
+      .map(s => ({ label: s.name, value: s.stopId })),
+    [destStopId]
+  )
+
+  const destOptions = useMemo(() =>
+    allStations
+      .filter(s => s.stopId !== originStopId)
+      .map(s => ({ label: s.name, value: s.stopId })),
+    [originStopId]
+  )
 
   const routes = useMemo(() => {
     if (!originStopId || !destStopId || originStopId === destStopId) return []
@@ -35,41 +45,21 @@ export default function TripPlanner({ nearestStation, data }) {
     <div className="trip-planner">
       <div className="trip-field">
         <span className="trip-label">De</span>
-        <input
-          list="trip-origins"
+        <Autocomplete
+          options={originOptions}
+          value={originName}
           placeholder="Estacao de partida..."
-          value={originInput}
-          onChange={e => {
-            setOriginInput(e.target.value)
-            setOriginStopId(resolveStopId(e.target.value))
-          }}
+          onChange={(name, stopId) => { setOriginName(name); setOriginStopId(stopId) }}
         />
-        <datalist id="trip-origins">
-          {allStations
-            .filter(s => s.stopId !== destStopId)
-            .map(s => (
-              <option key={s.stopId} value={s.name} />
-            ))}
-        </datalist>
       </div>
       <div className="trip-field">
         <span className="trip-label">Para</span>
-        <input
-          list="trip-stations"
+        <Autocomplete
+          options={destOptions}
+          value={destName}
           placeholder="Escolher destino..."
-          value={destInput}
-          onChange={e => {
-            setDestInput(e.target.value)
-            setDestStopId(resolveStopId(e.target.value))
-          }}
+          onChange={(name, stopId) => { setDestName(name); setDestStopId(stopId) }}
         />
-        <datalist id="trip-stations">
-          {allStations
-            .filter(s => s.stopId !== originStopId)
-            .map(s => (
-              <option key={s.stopId} value={s.name} />
-            ))}
-        </datalist>
       </div>
 
       {routes.length > 0 && (
