@@ -381,7 +381,7 @@ body {
   border-bottom: 1px solid var(--color-border);
 }
 .coord-legend span { display: flex; align-items: center; gap: 4px; }
-.coord-legend-stop { color: var(--color-stopped); }
+.coord-legend-stop { color: var(--color-text); }
 .coord-secondary-toggle {
   background: none;
   border: 1px solid var(--color-border);
@@ -399,24 +399,32 @@ body {
 .coord-lines-stack {
   display: flex;
   flex-wrap: wrap;
-  gap: 0;
-  padding: 8px 0;
+  gap: 10px;
+  padding: 10px;
 }
 .coord-lines-stack > .coord-line {
   flex: 1 1 280px;
-  padding: 0 12px;
-  border-right: 1px solid var(--color-border);
-  margin-bottom: 8px;
+  padding: 0;
+  border-radius: 8px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-top: 3px solid var(--line-color, var(--color-border));
+  overflow: hidden;
+  container-type: inline-size;
 }
-.coord-lines-stack > .coord-line:last-child {
-  border-right: none;
+
+@container (max-width: 350px) {
+  .coord-sub-row { display: none; }
+  .coord-secondary { display: none; }
 }
 
 .coord-line-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 4px;
+  margin-bottom: 0;
+  padding: 8px 12px;
+  background: color-mix(in srgb, var(--line-color, transparent) 8%, transparent);
 }
 
 .coord-line-header h3 {
@@ -474,10 +482,29 @@ body {
 
 .coord-line th,
 .coord-line td {
-  padding: 4px 6px;
-  text-align: left;
-  border-bottom: 1px solid var(--color-border);
+  padding: 5px 6px;
+  text-align: center;
+  border-bottom: none;
   white-space: nowrap;
+  vertical-align: bottom;
+}
+.coord-line th:first-child,
+.coord-line td:first-child {
+  text-align: right;
+}
+
+.coord-line thead th {
+  opacity: 0.6;
+  font-weight: 600;
+  background: color-mix(in srgb, var(--line-color, transparent) 5%, transparent);
+}
+
+.coord-line tbody tr:nth-child(odd) {
+  background: color-mix(in srgb, var(--color-text) 3%, transparent);
+}
+
+.coord-line tbody tr:hover {
+  background: color-mix(in srgb, var(--line-color, var(--color-text)) 12%, transparent);
 }
 
 .coord-line th { opacity: 0.5; font-weight: 500; }
@@ -486,20 +513,22 @@ body {
 }
 .coord-num { text-align: center; padding: 4px 8px; opacity: 0.7; }
 .coord-train-id { font-size: 0.6rem; opacity: 0.45; margin-right: 3px; }
-.coord-primary { border-left: 2px solid rgba(255,255,255,0.15); border-right: 2px solid rgba(255,255,255,0.15); opacity: 1; font-weight: 600; }
+.coord-primary { opacity: 1; font-weight: 600; }
 .coord-secondary { opacity: 0.4; }
-.coord-here { color: var(--color-stopped); opacity: 1; font-weight: 600; }
+.coord-here { color: var(--line-color, var(--color-stopped)); opacity: 1; font-weight: 600; }
 .coord-near { opacity: 1; font-weight: 500; }
 .coord-indicator { width: 10px; padding: 0 1px; text-align: center; }
-.coord-line td:nth-child(6),
-.coord-line th:nth-child(6) { border-left: 1px dotted var(--color-text-muted); }
+.coord-line tbody td:nth-child(5),
+.coord-line tfoot tr:first-child th:nth-child(4) { border-left: 2px solid var(--color-border-light); }
+.coord-line thead tr:nth-child(2) th:nth-child(4) { border-left: 2px solid var(--color-border-light); }
 .coord-train { font-size: 0.75rem; display: inline-block; line-height: 1; }
-.coord-train--stopped { color: var(--color-stopped); }
-.coord-train--near { color: #fff; }
-.coord-line .coord-group-header { text-align: center; font-weight: 600; padding: 4px 0; border-bottom: none; vertical-align: middle; }
+.coord-train--stopped { color: var(--line-color, var(--color-stopped)); }
+.coord-train--near { color: #fff; -webkit-text-stroke: 1.5px #000; paint-order: stroke fill; }
+.coord-line .coord-group-header { text-align: center; font-weight: 600; padding: 4px 0; border-bottom: none; vertical-align: bottom; }
 .coord-arrow { margin-right: 4px; }
-.coord-line tfoot th { border-bottom: none; }
-.coord-line tfoot tr:first-child th { border-top: 1px solid var(--color-border); }
+.coord-line .coord-sub-header { text-align: center; font-size: 0.7em; opacity: 0.4; font-weight: 500; padding: 2px 4px; }
+.coord-line tfoot th { border-bottom: none; opacity: 0.5; }
+.coord-line tfoot tr:first-child th { border-top: 2px solid var(--color-border); }
 
 /* Geolocation help modal */
 .geo-help-overlay {
@@ -563,8 +592,8 @@ body {
   .coord-station { padding-right: 8px; }
   .coord-num { padding: 5px 4px; }
 
-  .coord-lines-stack { padding: 4px 0; }
-  .coord-lines-stack > .coord-line { padding: 0 8px; }
+  .coord-lines-stack { padding: 6px; gap: 8px; }
+  .coord-lines-stack > .coord-line { padding: 0; }
 
   .coord-line-header h3 { font-size: 0.75rem; }
 

@@ -66,17 +66,18 @@ function renderLineTable(data, lineId, stations) {
     <table>
       <thead>
         <tr>
-          <th rowSpan={2}>Estação</th>
-          <th className="coord-group-header" colSpan={3}><span className="coord-arrow">↓</span>{terminalName(lineId, "a")}</th>
-          <th className="coord-group-header" colSpan={3}><span className="coord-arrow">↑</span>{terminalName(lineId, "b")}</th>
+          <th />
+          <th className="coord-group-header" colSpan={3}>{terminalName(lineId, "a")}</th>
+          <th className="coord-group-header" colSpan={3}>{terminalName(lineId, "b")}</th>
         </tr>
-        <tr>
-          <th className="coord-indicator" />
-          <th className="coord-num coord-primary">1o</th>
-          <th className="coord-num coord-secondary">2o</th>
-          <th className="coord-indicator" />
-          <th className="coord-num coord-primary">1o</th>
-          <th className="coord-num coord-secondary">2o</th>
+        <tr className="coord-sub-row">
+          <th className="coord-sub-header">Estação</th>
+          <th className="coord-sub-header" />
+          <th className="coord-sub-header">1º</th>
+          <th className="coord-sub-header coord-secondary">2º</th>
+          <th className="coord-sub-header" />
+          <th className="coord-sub-header">1º</th>
+          <th className="coord-sub-header coord-secondary">2º</th>
         </tr>
       </thead>
       <tbody>
@@ -99,18 +100,19 @@ function renderLineTable(data, lineId, stations) {
         })}
       </tbody>
       <tfoot>
-        <tr>
-          <th rowSpan={2}>Estação</th>
-          <th className="coord-indicator" />
-          <th className="coord-num coord-primary">1o</th>
-          <th className="coord-num coord-secondary">2o</th>
-          <th className="coord-indicator" />
-          <th className="coord-num coord-primary">1o</th>
-          <th className="coord-num coord-secondary">2o</th>
+        <tr className="coord-sub-row">
+          <th className="coord-sub-header">Estação</th>
+          <th className="coord-sub-header" />
+          <th className="coord-sub-header">1º</th>
+          <th className="coord-sub-header coord-secondary">2º</th>
+          <th className="coord-sub-header" />
+          <th className="coord-sub-header">1º</th>
+          <th className="coord-sub-header coord-secondary">2º</th>
         </tr>
         <tr>
-          <th className="coord-group-header" colSpan={3}><span className="coord-arrow">↓</span>{terminalName(lineId, "a")}</th>
-          <th className="coord-group-header" colSpan={3}><span className="coord-arrow">↑</span>{terminalName(lineId, "b")}</th>
+          <th />
+          <th className="coord-group-header" colSpan={3}>{terminalName(lineId, "a")}</th>
+          <th className="coord-group-header" colSpan={3}>{terminalName(lineId, "b")}</th>
         </tr>
       </tfoot>
     </table>
@@ -147,7 +149,7 @@ export default function StationTimelines({ data, lineStatus, loading, expanded, 
       <div className={`coord-lines-stack${showSecondary ? " show-secondary" : ""}`}>
         {(visibleLines ? [...visibleLines].filter(id => lines[id]).map(id => [id, lines[id]]) : Object.entries(lines)).map(([lineId, line]) => {
           return (
-            <div key={lineId} className="coord-line">
+            <div key={lineId} className="coord-line" style={{ '--line-color': line.color }}>
               <div className="coord-line-header">
                 <h3 style={{ color: line.color }}>
                   {line.label}
