@@ -188,11 +188,11 @@ body {
 .info-panel-arrow {
   font-size: 0.7rem;
   transition: transform 0.2s ease;
-  transform: rotate(180deg);
+  transform: rotate(0deg);
 }
 
 .info-panel-arrow--open {
-  transform: rotate(0deg);
+  transform: rotate(180deg);
 }
 
 .info-panel-right {
@@ -529,6 +529,116 @@ body {
 .coord-line .coord-sub-header { text-align: center; font-size: 0.7em; opacity: 0.4; font-weight: 500; padding: 2px 4px; }
 .coord-line tfoot th { border-bottom: none; opacity: 0.5; }
 .coord-line tfoot tr:first-child th { border-top: 2px solid var(--color-border); }
+
+/* Trip planner */
+.trip-planner {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.trip-field {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8rem;
+  margin-bottom: 6px;
+}
+
+.trip-label {
+  font-weight: 600;
+  opacity: 0.5;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  width: 30px;
+  flex-shrink: 0;
+}
+
+.trip-field input {
+  background: var(--color-surface);
+  color: var(--color-text);
+  border: 1px solid var(--color-border-light);
+  border-radius: 6px;
+  padding: 4px 8px;
+  font-size: 0.8rem;
+  font-family: inherit;
+  flex: 1;
+  min-width: 0;
+}
+.trip-field input::placeholder {
+  color: var(--color-text-muted);
+  opacity: 0.6;
+}
+
+.trip-routes {
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.trip-route {
+  flex: 1 1 200px;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 8px 10px;
+  background: var(--color-surface);
+}
+
+.trip-route--best {
+  border-color: var(--color-border-light);
+}
+
+.trip-route-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.trip-route-time {
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.trip-route-info {
+  font-size: 0.65rem;
+  opacity: 0.5;
+  text-transform: uppercase;
+}
+
+.trip-route-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.trip-step {
+  display: flex;
+  align-items: stretch;
+  gap: 8px;
+}
+
+.trip-line-bar {
+  width: 4px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.trip-step-info {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.7rem;
+  gap: 1px;
+  padding: 2px 0;
+}
+
+.trip-step-stations {
+  font-weight: 600;
+}
+
+.trip-step-meta {
+  opacity: 0.5;
+}
 
 /* Geolocation help modal */
 .geo-help-overlay {

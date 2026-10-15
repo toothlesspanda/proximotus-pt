@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react"
 import { lines } from "../data/lines"
 import StationTimelines from "./StationTimelines"
+import TripPlanner from "./TripPlanner"
 
 const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent)
 
@@ -23,6 +24,11 @@ export default function BottomPanel({ data, lineStatus, loading, onRefresh, visi
 
   return (
     <div className="info-panel">
+      <div className="info-panel-body">
+        <TripPlanner nearestStation={nearestStation} data={data} />
+        <StationTimelines data={data} lineStatus={lineStatus} loading={loading} expanded={expanded} visibleLines={visibleLines} />
+      </div>
+
       <div className="info-panel-header">
         <div className="info-panel-title">
           <button className={`logo-btn${showAbout ? " about-btn--active" : ""}`} onClick={() => { track('about'); setShowAbout(a => !a) }} title="Sobre">
@@ -57,10 +63,6 @@ export default function BottomPanel({ data, lineStatus, loading, onRefresh, visi
             {locating ? "..." : geoError ? "!" : <svg viewBox="-24 -34 48 68" width="16" height="16"><path d="M0-30c-11 0-20 9-20 20C-20 1 0 30 0 30S20 1 20-10C20-21 11-30 0-30z" fill="currentColor" /><circle cx="0" cy="-10" r="8" fill="var(--color-surface)" /></svg>}
           </button>
         </div>
-      </div>
-
-      <div className="info-panel-body">
-        <StationTimelines data={data} lineStatus={lineStatus} loading={loading} expanded={expanded} visibleLines={visibleLines} />
       </div>
 
       {showAbout && (
