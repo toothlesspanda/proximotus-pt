@@ -145,11 +145,7 @@ export default function StationTimelines({ data, lineStatus, loading, expanded, 
         </button>
       </div>
       <div className={`coord-lines-stack${showSecondary ? " show-secondary" : ""}`}>
-        {Object.entries(lines).sort(([a], [b]) => {
-          const aVis = visibleLines?.has(a) ? 0 : 1
-          const bVis = visibleLines?.has(b) ? 0 : 1
-          return aVis - bVis
-        }).map(([lineId, line]) => {
+        {(visibleLines ? [...visibleLines].filter(id => lines[id]).map(id => [id, lines[id]]) : Object.entries(lines)).map(([lineId, line]) => {
           return (
             <div key={lineId} className="coord-line">
               <div className="coord-line-header">
