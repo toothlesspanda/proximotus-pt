@@ -16,6 +16,19 @@ function getEntries(data, lineId, stopId, dir) {
   return results
 }
 
+const ROW_H = 70
+const PAD_Y = 40
+const STACK_GAP = 20
+
+function collapsedHeight(dirs) {
+  return dirs.length === 1 ? 100 : 170
+}
+
+function expandedHeight(dirs) {
+  const rows = dirs.reduce((sum, d) => sum + ROW_H + Math.min(d.entries.length, 3) * ROW_H, 0)
+  return rows + PAD_Y * 2
+}
+
 export default function StationTimes({ metroData, expandedStation, onToggleExpand }) {
   const allStations = []
 
@@ -40,26 +53,39 @@ export default function StationTimes({ metroData, expandedStation, onToggleExpan
     }
   }
 
+  const badges = allStations
+    .map((item) => {
+      const { station, lineId, dest, aEntries, bEntries, isTerminalA, isTerminalB } = item
+      const dirs = [
+        !isTerminalB && { key: "b", label: dest.b.label, entries: bEntries },
+        !isTerminalA && { key: "a", label: dest.a.label, entries: aEntries },
+      ].filter(Boolean)
+      const hasAny = dirs.some(dir => {
+        const first = dir.entries[0]
+        return first && (isAtStation(first.time) || formatTime(first.time) != null)
+      })
+      if (!hasAny) return null
+      const key = `${lineId}:${station.stopId}`
+      const height = expandedStation === key ? expandedHeight(dirs) : collapsedHeight(dirs)
+      return { ...item, key, dirs, height }
+    })
+    .filter(Boolean)
+
+  // Interchange stations share the same coordinates across lines: stack their badges
+  const stackedBottom = new Map()
+  for (const badge of badges) {
+    const pos = `${badge.station.x},${badge.station.y}`
+    const baseY = badge.station.y - (badge.dirs.length === 1 ? 50 : 85)
+    const prevBottom = stackedBottom.get(pos)
+    badge.badgeY = prevBottom == null ? baseY : prevBottom + STACK_GAP
+    stackedBottom.set(pos, badge.badgeY + badge.height)
+  }
+
   return (
     <g className="station-times-layer">
-      {allStations.map(({ station, lineId, line, aEntries, bEntries, dest, isTerminalA, isTerminalB }) => {
-        const key = `${lineId}:${station.stopId}`
+      {badges.map(({ station, line, aEntries, bEntries, dest, isTerminalA, isTerminalB, key, dirs, badgeY }) => {
         const isExpanded = expandedStation === key
-
-        const dirs = [
-          !isTerminalB && { key: "b", label: dest.b.label, entries: bEntries },
-          !isTerminalA && { key: "a", label: dest.a.label, entries: aEntries },
-        ].filter(Boolean)
-
-        const hasAny = dirs.some(dir => {
-          const first = dir.entries[0]
-          if (!first) return false
-          return isAtStation(first.time) || formatTime(first.time) != null
-        })
-        if (!hasAny) return null
-
         const badgeX = station.x
-        const badgeY = station.y - (dirs.length === 1 ? 50 : 85)
 
         return (
           <g key={key} onClick={() => onToggleExpand(isExpanded ? null : key)} style={{ cursor: "pointer" }}>
@@ -101,8 +127,8 @@ export default function StationTimes({ metroData, expandedStation, onToggleExpan
             )}
 
             {isExpanded && (() => {
-              const rowH = 70
-              const padY = 40
+              const rowH = ROW_H
+              const padY = PAD_Y
               const badgeW = 420
 
               const renderRow = (e, i, baseY) => {
