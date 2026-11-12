@@ -3,12 +3,33 @@ name: Deploy to Netlify
 on:
   release:
     types: [published]
+  workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # Manual run: create the next vN release (same logic as release.sh).
+      # Releases created with GITHUB_TOKEN don't trigger this workflow again,
+      # so the deploy below runs in this same job.
+      - name: Create release
+        if: github.event_name == 'workflow_dispatch'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          last=$(git tag --sort=-v:refname | head -1 | tr -d 'v')
+          tag="v$((last + 1))"
+          notes=$(git log "v$last"..HEAD --oneline)
+          [ -n "$notes" ] || { echo "No new commits since v$last"; exit 1; }
+          gh release create "$tag" --title "$tag" --notes "$notes" --target "$GITHUB_SHA"
+          echo "RELEASE_TAG=$tag" >> "$GITHUB_ENV"
 
       - uses: actions/setup-node@v4
         with:
@@ -22,7 +43,7 @@ jobs:
           VITE_METRO_API_URL: /api/metro
           VITE_METRO_API_TOKEN: ${{ secrets.VITE_METRO_API_TOKEN }}
 
-      - run: npx netlify-cli deploy --prod --no-build --dir=dist --functions=netlify/functions --message "Deploy ${{ github.event.release.tag_name }}"
+      - run: npx netlify-cli deploy --prod --no-build --dir=dist --functions=netlify/functions --message "Deploy ${{ github.event.release.tag_name || env.RELEASE_TAG }}"
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
